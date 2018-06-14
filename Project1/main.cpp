@@ -1,30 +1,23 @@
-﻿#define STB_IMAGE_IMPLEMENTATION
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
+﻿
+#include "main.h"
+#include "model.h"
+#include "chess_bishop.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-//#include <learnopengl/filesystem.h>
-#include <learnopengl/shader_m.h>
-#include <learnopengl/camera.h>
-#include <learnopengl/model.h>
-
-#include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-unsigned int loadCubemap(vector<std::string> faces);
+void init_chess_list(vector<Chess *>chess_list);
+void show_chess(Chess &chess_total);
+//unsigned int loadCubemap(vector<std::string> faces);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 8.0f));
+Camera camera(glm::vec3(0.0f, 8.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -132,17 +125,14 @@ int main()
 
 	// load models
 	// -----------
-	Model EarModel("earth/earth.3DS");
+	Model EarModel("Chess/Bishop.obj");
+	//Chess *bishop_a = new chess_bishop(0, 0, 0, "Chess/Bishop.obj");
 
-	Model MoonModel("moon/moon.3DS");
-
-	Model SaturnoModel("venus/moon.3DS");
-
-	Model SunModel("nanosuit/nanosuit.obj");
-
-	Model Planet1("planet1/moon.3DS");
-
-	Model Planet2("planet2/moon.3DS");
+	vector <Chess *> chess_list;
+	init_chess_list(chess_list);
+	//Chess *King_a = new chess_bishop(0, 0, 0, 0, "Chess/Bishop.obj");
+	//show_chess(*bishop_a);
+	//vector<Chess *> chess_total{ King_a };
 
 
 	unsigned int skyboxVAO, skyboxVBO;
@@ -165,7 +155,7 @@ int main()
 		"skybox/back.jpg"
 	};
 
-	unsigned int cubemapTexture = loadCubemap(faces);
+	//unsigned int cubemapTexture = loadCubemap(faces);
 
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
@@ -195,100 +185,41 @@ int main()
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		sunShader.use();
+		//sunShader.use();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		sunShader.setMat4("projection", projection);
-		sunShader.setMat4("view", view);
+		//sunShader.setMat4("projection", projection);
+		//sunShader.setMat4("view", view);
 
-
-		glm::mat4 sunmodel;
-		//sunmodel = glm::rotate(sunmodel, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		//sunmodel = glm::scale(sunmodel, glm::vec3(0.002f, 0.002f, 0.002f));	// it's a bit too big for our scene, so scale it down
-		sunShader.setMat4("model", sunmodel);
-		SunModel.Draw(sunShader);
 		
 		
 		
-		// don't forget to enable shader before setting uniforms
-		ourShader.use();
+		//// don't forget to enable shader before setting uniforms
+		//ourShader.use();
 
-		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		ourShader.setVec3("lightPos", lightPos);
-		ourShader.setVec3("viewPos", camera.Position);
+		//ourShader.setVec3("objectColor", 0.8f, 0.8f, 0.0f);
+		//ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		//ourShader.setVec3("lightPos", lightPos);
+		//ourShader.setVec3("viewPos", camera.Position);
 
 
-		// view/projection transformations
-		glm::mat4 projection_sun = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view_sun = camera.GetViewMatrix();
-		ourShader.setMat4("projection", projection);
-		ourShader.setMat4("view", view);
+		//glm::mat4 projection_sun = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		//glm::mat4 view_sun = camera.GetViewMatrix();
+		//ourShader.setMat4("projection", projection);
+		//ourShader.setMat4("view", view);
 
+		//
+		//glm::mat4 model1;    // earth model
+		//					 model1 = glm::translate(model1, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		//model1 = glm::scale(model1, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
+		//ourShader.setMat4("model", model1);
+		////EarModel.Draw(ourShader);
+		//(*bishop_a).show(ourShader);
+		//
 		
 
-		double EarX = sin(glfwGetTime());
-		double EarZ = cos(glfwGetTime());
-
-		// render the loaded model
-		glm::mat4 model1;    // earth model
-							 //model1 = glm::translate(model1, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model1 = glm::translate(model1, glm::vec3(EarX, 0.0f, EarZ));
-		model1 = glm::scale(model1, glm::vec3(0.0002f, 0.0002f, 0.0002f));	// it's a bit too big for our scene, so scale it down
-		model1 = glm::rotate(model1, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		model1 = glm::rotate(model1, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		ourShader.setMat4("model", model1);
-		EarModel.Draw(ourShader);
-
-		glm::mat4 moonmodel;
-		moonmodel = glm::translate(moonmodel, glm::vec3(EarX, 0.0f, EarZ));
-		moonmodel = glm::translate(moonmodel, glm::vec3(cos(glfwGetTime() * 4.5) * 0.1, sin(glfwGetTime() *4.5) * 0.1, 0.0f));
-		moonmodel = glm::scale(moonmodel, glm::vec3(0.0001f, 0.0001f, 0.0001f));	// it's a bit too big for our scene, so scale it down
-		model1 = glm::rotate(model1, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-		ourShader.setMat4("model", moonmodel);
-		MoonModel.Draw(ourShader);
 
 
-		double x = glfwGetTime();
-		double SatX = sin(x * 0.7);
-		double SatY = sin(x * 0.7);
-		double SatZ = cos(x * 0.7);
-		glm::mat4 saturnomodel;
-		saturnomodel = glm::translate(saturnomodel, glm::vec3(SatX, SatY, SatZ));
-		saturnomodel = glm::scale(saturnomodel, glm::vec3(0.0005f, 0.0005f, 0.0005f));
-		saturnomodel = glm::rotate(saturnomodel, (float)glfwGetTime(), glm::vec3(0.5f, 0.3f, 0.1f));
-		ourShader.setMat4("model", saturnomodel);
-		SaturnoModel.Draw(ourShader);
-
-
-		double x1 = glfwGetTime();
-		double x2 = x1 + 50;
-		double x3 = x2 + 42.3;
-
-		double P1X = 2.1 * (x2 / (pow(x1*x1 + x2 * x2, 0.5)) * cos(x1)) + 2.1 * ((x1 * x3) / (pow(x1*x1 + x2 * x2, 0.5)*pow(x1*x1 + x2 * x2 + x3 * x3, 0.5))) * sin(x1);
-		double P1Y = -2.1*x1*cos(x1) / pow(x1*x1 + x2 * x2, 0.5) + 2.1*x2*x3*sin(x1) / (pow(x1*x1 + x2 * x2, 0.5) * pow(x1*x1 + x2 * x2 + x3 * x3, 0.5));
-		double P1Z = -2.1*sin(x1) * pow(x1*x1 + x2 * x2, 0.5) / pow(x1*x1 + x2 * x2 + x3 * x3, 0.5);
-		glm::mat4 P1model;
-		P1model = glm::translate(P1model, glm::vec3(P1X, P1Y, P1Z));
-		P1model = glm::scale(P1model, glm::vec3(0.0006f, 0.0006f, 0.0006f));
-		P1model = glm::rotate(P1model, (float)glfwGetTime(), glm::vec3(0.5f, 0.3f, 0.1f));
-		ourShader.setMat4("model", P1model);
-		Planet1.Draw(ourShader);
-
-		x1 = (glfwGetTime() + 93) * 0.3;
-		x2 = (x1 + 28) * 0.3;
-		x3 = x2 * 0.2;
-
-		P1X = 3.1 * (x2 / (pow(x1*x1 + x2 * x2, 0.5)) * cos(x1)) + 3.1 * ((x1 * x3) / (pow(x1*x1 + x2 * x2, 0.5)*pow(x1*x1 + x2 * x2 + x3 * x3, 0.5))) * sin(x1);
-		P1Y = -3.1*x1*cos(x1) / pow(x1*x1 + x2 * x2, 0.5) + 3.1*x2*x3*sin(x1) / (pow(x1*x1 + x2 * x2, 0.5) * pow(x1*x1 + x2 * x2 + x3 * x3, 0.5));
-		P1Z = -3.1*sin(x1) * pow(x1*x1 + x2 * x2, 0.5) / pow(x1*x1 + x2 * x2 + x3 * x3, 0.5);
-		glm::mat4 P2model;
-		P2model = glm::translate(P2model, glm::vec3(P1X, P1Y, P1Z));
-		P2model = glm::scale(P2model, glm::vec3(0.0008f, 0.0008f, 0.0008f));
-		P2model = glm::rotate(P2model, (float)glfwGetTime(), glm::vec3(0.5f, 0.3f, 0.1f));
-		ourShader.setMat4("model", P2model);
-		Planet2.Draw(ourShader);
 
 
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -297,12 +228,12 @@ int main()
 		skyboxShader.setMat4("view", view);
 		skyboxShader.setMat4("projection", projection);
 		// skybox cube
-		glBindVertexArray(skyboxVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // set depth function back to default
+		//glBindVertexArray(skyboxVAO);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindVertexArray(0);
+		//glDepthFunc(GL_LESS); // set depth function back to default
 
 
 
@@ -373,33 +304,108 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 }
 
 
-// -------------------------------------------------------
-unsigned int loadCubemap(vector<std::string> faces)
+
+void show_chess(Chess &chess_total)
 {
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+	Shader our_shader("model.vs", "model.fs");
+	our_shader.use();
+	our_shader.setVec3("objectColor", 0.8f, 0.8f, 0.0f);
+	our_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	our_shader.setVec3("lightPos", lightPos);
+	our_shader.setVec3("viewPos", camera.Position);
 
-	int width, height, nrChannels;
-	for (unsigned int i = 0; i < faces.size(); i++)
-	{
-		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			stbi_image_free(data);
-		}
-		else
-		{
-			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-			stbi_image_free(data);
-		}
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-	return textureID;
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+
+	// view/projection transformations
+	glm::mat4 projection_sun = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view_sun = camera.GetViewMatrix();
+	our_shader.setMat4("projection", projection);
+	our_shader.setMat4("view", view);
+	
+	glm::mat4 model; 
+	chess_total.get_model(model);
+
+	our_shader.setMat4("model", model);
+
+	chess_total.show(our_shader);
 }
+
+void init_chess_list(vector<Chess *>chess_list)
+{
+	chess_list.reserve(MAX_CHESS_NUMBER);
+
+	Chess *King_A = new chess_bishop(0, 0, 0, 0,"Chess/King.obj");
+	chess_list.push_back(King_A);
+	Chess *King_B = new chess_bishop(0, 0, 1, 0, "Chess/King.obj");
+	chess_list.push_back(King_B);
+	Chess *King_C = new chess_bishop(0, 0, 2, 0, "Chess/King.obj");
+	chess_list.push_back(King_C);
+
+	Chess *Queen_A = new chess_bishop(0, 0, 0, 1, "Chess/Queen.obj");
+	chess_list.push_back(King_A);
+	Chess *Queen_B = new chess_bishop(0, 0, 1, 1, "Chess/Queen.obj");
+	chess_list.push_back(King_B);
+	Chess *Queen_C = new chess_bishop(0, 0, 2, 1, "Chess/Queen.obj");
+	chess_list.push_back(King_C);
+
+	Chess *Rook_A = new chess_bishop(0, 0, 0, 2, "Chess/Rook.obj");
+	chess_list.push_back(King_A);
+	Chess *Rook_B = new chess_bishop(0, 0, 1, 2, "Chess/Rook.obj");
+	chess_list.push_back(King_B);
+	Chess *Rook_C = new chess_bishop(0, 0, 2, 2, "Chess/Rook.obj");
+	chess_list.push_back(King_C);
+
+
+
+
+}
+
+
+
+
+// -------------------------------------------------------
+//unsigned int loadCubemap(vector<std::string> faces)
+//{
+//	unsigned int textureID;
+//	glGenTextures(1, &textureID);
+//	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+//
+//	int width, height, nrChannels;
+//	for (unsigned int i = 0; i < faces.size(); i++)
+//	{
+//		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+//		if (data)
+//		{
+//			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+//			stbi_image_free(data);
+//		}
+//		else
+//		{
+//			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+//			stbi_image_free(data);
+//		}
+//	}
+//	for (unsigned int i = 0; i < faces.size(); i++)
+//	{
+//		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+//		if (data)
+//		{
+//			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+//			stbi_image_free(data);
+//		}
+//		else
+//		{
+//			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+//			stbi_image_free(data);
+//		}
+//	}
+//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+//
+//	return textureID;
+//}
