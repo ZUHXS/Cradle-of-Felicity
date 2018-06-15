@@ -23,5 +23,6 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	pos_ = glm::vec3(static_cast<float>(init_cor_x), static_cast<float>(init_cor_y), 0.0f);
 	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0);
 	//scale_ = glm::vec3(0.1, 0.1, 0.1);
-	scale_ = glm::vec3(0.005, 0.005, 0.005);
+	//scale_ = glm::vec3(0.005, 0.005, 0.005);
+	scale_ = glm::vec3(0.1f, 0.1f, 0.1f);
 }

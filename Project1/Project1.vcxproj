@@ -139,6 +139,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="src\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chess_class\chess.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="chess_class\ChessWizard.h" />
     <ClInclude Include="chess_class\chess_bishop.h" />
     <ClInclude Include="glad\glad.h" />
+    <ClInclude Include="include\camera.h" />
     <ClInclude Include="KHR\khrplatform.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="model.h" />

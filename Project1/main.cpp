@@ -20,9 +20,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
-
-
+glm::vec3 lightPos(-4.0f, 4.0f, -1.0f);
 
 int main()
 {
@@ -42,8 +40,8 @@ int main()
 
 														 // glfw window creation
 														 // --------------------
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Cradle-of Grief", NULL, NULL);
-	if (window == NULL)
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Cradle-of Grief", nullptr, nullptr);
+	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -58,9 +56,11 @@ int main()
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR);
 
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
@@ -69,6 +69,9 @@ int main()
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
+
+	Shader simpleDepthShader("shader/3.1.3.shadow_mapping_depth.vs", "shader/3.1.3.shadow_mapping_depth.fs");
+	Shader debugDepthQuad("shader/3.1.3.debug_quad.vs", "shader/3.1.3.debug_quad_depth.fs");
 
 	// build and compile shaders
 	// -------------------------
@@ -138,10 +141,10 @@ int main()
 		new ChessQueen(0, 0, 2, 1, "models/Chess/Queen.obj"),
 		new ChessRook(-3, -4, 0, 2, "models/Chess/Rook.obj"),
 		new ChessRook(0, 0, 1, 2, "models/Chess/Rook.obj"),
-		new ChessRook(0, 0, 2, 2, "models/Chess/Rook.obj"),
-		new ChessBishop(-2, -4, 0, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 1, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 2, 3, "models/Chess/Bishop.obj"),
+		new ChessRook(0, 0, 2, 2, "models/Chess/Rook.obj"),*/
+		new ChessBishop(-2, -7, 0, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(-16, 12, 1, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(12, 4, 2, 3, "models/Chess/Bishop.obj"),/*
 		new ChessBishop(-1, -4, 0, 4, "models/Chess/Bishop.obj"),
 		new ChessBishop(0, 0, 1, 4, "models/Chess/Bishop.obj"),
 		new ChessBishop(0, 0, 2, 4, "models/Chess/Bishop.obj"),
@@ -189,7 +192,7 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
 
 
 	vector<std::string> faces
@@ -208,6 +211,37 @@ int main()
 	skyboxShader.setInt("skybox", 0);
 
 
+
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	// create depth texture
+	unsigned int depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	Shader shader("shader/board-model.vs", "shader/board-model.fs");
+	shader.use();
+	shader.setInt("diffuseTexture", 0);
+	shader.setInt("shadowMap", 1);
+	debugDepthQuad.use();
+	debugDepthQuad.setInt("depthMap", 0);
+
+	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+
+
 	//Model EarModel("sol/sol.c4d");
 
 	// draw in wireframe
@@ -219,7 +253,7 @@ int main()
 	{
 		// per-frame time logic
 		// --------------------
-		float currentFrame = glfwGetTime();
+		const float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -233,14 +267,63 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//sunShader.use();
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
 
-		show_chess_board(chess_board_model);
 		
-		show_chess(chess_list);
+		//show_chess(chess_list);
+
+		//show_chess_board(chess_board_model);
+
+		process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
+
+
+		//glm::mat4 lightProjection, lightView;
+		//glm::mat4 lightSpaceMatrix;
+		//float near_plane = 1.0f, far_plane = 7.5f;
+		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		//lightSpaceMatrix = lightProjection * lightView;
+		//simpleDepthShader.use();
+		//simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+		//glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		//glClear(GL_DEPTH_BUFFER_BIT);
+		//glActiveTexture(GL_TEXTURE0);
+		//show_chess(chess_list, simpleDepthShader);
+		//show_chess_board(chess_board_model, simpleDepthShader);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//shader.use();
+		//shader.setMat4("projection", projection);
+		//shader.setMat4("view", view);
+		//shader.setVec3("viewPos", camera.Position);
+		//shader.setVec3("lightPos", lightPos);
+		//shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		//glActiveTexture(GL_TEXTURE0);
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, depthMap);
+		//show_chess(chess_list, shader);
+		//show_chess_board(chess_board_model, shader);
+
+
+		//debugDepthQuad.use();
+		//debugDepthQuad.setFloat("near_plane", near_plane);
+		//debugDepthQuad.setFloat("far_plane", far_plane);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, depthMap);
+
+
+
 
 
 
@@ -277,6 +360,62 @@ int main()
 	return 0;
 }
 
+
+void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::vector<Chess *> &chess_list, Model &chess_board_model, unsigned int &depthMapFBO, unsigned int &depthMap)
+{
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
+	static glm::mat4 lightProjection, lightView;
+	static glm::mat4 lightSpaceMatrix;
+	const float near_plane = 1.0f;
+	const float far_plane = 7.5f;
+	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	lightSpaceMatrix = lightProjection * lightView;
+	DepthShader.use();
+	DepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glActiveTexture(GL_TEXTURE0);
+	show_chess(chess_list, DepthShader);
+	show_chess_board(chess_board_model, DepthShader);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+	shader.use();
+	
+	shader.setMat4("projection", projection);
+	shader.setMat4("view", view);
+	shader.setVec3("viewPos", camera.Position);
+	shader.setVec3("lightPos", lightPos);
+	shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	show_chess(chess_list, shader);
+	show_chess_board(chess_board_model, shader);
+
+
+	DepthQuad.use();
+	DepthQuad.setFloat("near_plane", near_plane);
+	DepthQuad.setFloat("far_plane", far_plane);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+
+}
+
+
+
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
@@ -302,6 +441,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 }
+
+
+
+
+
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
@@ -332,80 +476,80 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 
 
-void show_chess(std::vector<Chess *> &chess_list)
+void show_chess(std::vector<Chess *> &chess_list, Shader &shader)
 {
-	Shader our_shader("shader/model.vs", "shader/model.fs");
-	// team 1, yellow
-	our_shader.use();
-	our_shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
-	our_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-	our_shader.setVec3("lightPos", lightPos);
-	our_shader.setVec3("viewPos", camera.Position);
+	//Shader our_shader("shader/model.vs", "shader/model.fs");
+	//// team 1, yellow
+	//our_shader.use();
+	//our_shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
+	//our_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	//our_shader.setVec3("lightPos", lightPos);
+	//our_shader.setVec3("viewPos", camera.Position);
 
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 view = camera.GetViewMatrix();
+	//const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
+	//const glm::mat4 view = camera.GetViewMatrix();
 
-	// view/projection transformations
+	//// view/projection transformations
 
-	our_shader.setMat4("projection", projection);
-	our_shader.setMat4("view", view);
+	//our_shader.setMat4("projection", projection);
+	//our_shader.setMat4("view", view);
 	vector<Chess *>::iterator it = chess_list.begin();
 	while(it<chess_list.end())
 	{
 		glm::mat4 model;
 		(*it)->get_model(model);
-		our_shader.setMat4("model", model);
-		(*it)->show(our_shader);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
 		//++it;
 		it += 3;
 	}
 
 	// team2, green
-	our_shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+	shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
 	it = chess_list.begin();
 	++it;
 	while (it<chess_list.end())
 	{
 		glm::mat4 model;
 		(*it)->get_model(model);
-		our_shader.setMat4("model", model);
-		(*it)->show(our_shader);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
 		it += 3;
 	}
 
 	// team3, red
-	our_shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+	shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
 	it = chess_list.begin();
 	it += 2;
 	while (it<chess_list.end())
 	{
 		glm::mat4 model;
 		(*it)->get_model(model);
-		our_shader.setMat4("model", model);
-		(*it)->show(our_shader);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
 		it += 3;
 	}
 }
 
-void show_chess_board(Model &chess_board_model)
+void show_chess_board(Model &chess_board_model, Shader &shader)
 {
-	Shader our_shader("shader/board-model.vs", "shader/board-model.fs");
-	our_shader.use();
-	const auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	const auto view = camera.GetViewMatrix();
+	//Shader our_shader("shader/board-model.vs", "shader/board-model.fs");
+	//our_shader.use();
+	//const auto projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
+	//const auto view = camera.GetViewMatrix();
 
 	// view/projection transformations
 
-	our_shader.setMat4("projection", projection);
-	our_shader.setMat4("view", view);
+	//our_shader.setMat4("projection", projection);
+	//our_shader.setMat4("view", view);
 
 	glm::mat4 board_model;
 	board_model = glm::rotate(board_model, 3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-	board_model = glm::scale(board_model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
-	our_shader.setMat4("model", board_model);
-	chess_board_model.Draw(our_shader);
+	board_model = glm::scale(board_model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
+	shader.setMat4("model", board_model);
+	chess_board_model.Draw(shader);
 	
 }
 

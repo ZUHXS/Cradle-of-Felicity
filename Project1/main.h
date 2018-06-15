@@ -9,8 +9,8 @@
 
 //#include <learnopengl/filesystem.h>
 #include <learnopengl/shader_m.h>
-#include <learnopengl/camera.h>
-
+//#include <learnopengl/camera.h>
+#include "include/camera.h"
 
 #include <iostream>
 //#include "show_chess.hpp"
@@ -32,5 +32,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
-void show_chess(std::vector<Chess *> &chess_list);
-void show_chess_board(Model &chess_board_model);
+void show_chess(std::vector<Chess *> &chess_list, Shader &shader);
+void show_chess_board(Model &chess_board_model, Shader &shader);
+void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::vector<Chess *> &chess_list, Model &chess_board_model, unsigned int &depthMapFBO, unsigned int &depthMap);
