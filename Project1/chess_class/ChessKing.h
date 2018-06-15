@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "chess.h"
+#include <string>
 
 class ChessKing : public Chess
 {

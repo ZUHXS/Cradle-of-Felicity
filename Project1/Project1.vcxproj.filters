@@ -18,40 +18,40 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="chess.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="chess_bishop.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessQueen.cpp">
+    <ClCompile Include="chess_class\chess.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessKing.cpp">
+    <ClCompile Include="chess_class\chess_bishop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessRook.cpp">
+    <ClCompile Include="chess_class\ChessGunman.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessKnight.cpp">
+    <ClCompile Include="chess_class\ChessKing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessViper.cpp">
+    <ClCompile Include="chess_class\ChessKnight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessWizard.cpp">
+    <ClCompile Include="chess_class\ChessPawn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessGunman.cpp">
+    <ClCompile Include="chess_class\ChessQueen.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ChessPawn.cpp">
+    <ClCompile Include="chess_class\ChessRook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="chess_class\ChessViper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="chess_class\ChessWizard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,40 +62,40 @@
     <ClInclude Include="KHR\khrplatform.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="chess.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="chess_bishop.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessQueen.h">
+    <ClInclude Include="chess_class\ChessWizard.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessKing.h">
+    <ClInclude Include="chess_class\chess.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessRook.h">
+    <ClInclude Include="chess_class\chess_bishop.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessKnight.h">
+    <ClInclude Include="chess_class\ChessGunman.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessViper.h">
+    <ClInclude Include="chess_class\ChessKing.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessWizard.h">
+    <ClInclude Include="chess_class\ChessKnight.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessGunman.h">
+    <ClInclude Include="chess_class\ChessPawn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ChessPawn.h">
+    <ClInclude Include="chess_class\ChessQueen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="chess_class\ChessRook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="chess_class\ChessViper.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

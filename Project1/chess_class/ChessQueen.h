@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "chess_class/chess.h"
+#include "chess.h"
 
 class ChessQueen : public Chess
 {

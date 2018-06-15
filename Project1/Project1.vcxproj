@@ -126,31 +126,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="chess.cpp" />
-    <ClCompile Include="ChessGunman.cpp" />
-    <ClCompile Include="ChessKnight.cpp" />
-    <ClCompile Include="ChessPawn.cpp" />
-    <ClCompile Include="ChessRook.cpp" />
-    <ClCompile Include="ChessViper.cpp" />
-    <ClCompile Include="ChessWizard.cpp" />
-    <ClCompile Include="chess_bishop.cpp" />
-    <ClCompile Include="ChessKing.cpp" />
-    <ClCompile Include="ChessQueen.cpp" />
+    <ClCompile Include="chess_class\chess.cpp" />
+    <ClCompile Include="chess_class\ChessGunman.cpp" />
+    <ClCompile Include="chess_class\ChessKing.cpp" />
+    <ClCompile Include="chess_class\ChessKnight.cpp" />
+    <ClCompile Include="chess_class\ChessPawn.cpp" />
+    <ClCompile Include="chess_class\ChessQueen.cpp" />
+    <ClCompile Include="chess_class\ChessRook.cpp" />
+    <ClCompile Include="chess_class\ChessViper.cpp" />
+    <ClCompile Include="chess_class\ChessWizard.cpp" />
+    <ClCompile Include="chess_class\chess_bishop.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chess.h" />
-    <ClInclude Include="ChessGunman.h" />
-    <ClInclude Include="ChessKnight.h" />
-    <ClInclude Include="ChessPawn.h" />
-    <ClInclude Include="ChessRook.h" />
-    <ClInclude Include="ChessViper.h" />
-    <ClInclude Include="ChessWizard.h" />
-    <ClInclude Include="chess_bishop.h" />
-    <ClInclude Include="ChessKing.h" />
-    <ClInclude Include="ChessQueen.h" />
+    <ClInclude Include="chess_class\chess.h" />
+    <ClInclude Include="chess_class\ChessGunman.h" />
+    <ClInclude Include="chess_class\ChessKing.h" />
+    <ClInclude Include="chess_class\ChessKnight.h" />
+    <ClInclude Include="chess_class\ChessPawn.h" />
+    <ClInclude Include="chess_class\ChessQueen.h" />
+    <ClInclude Include="chess_class\ChessRook.h" />
+    <ClInclude Include="chess_class\ChessViper.h" />
+    <ClInclude Include="chess_class\ChessWizard.h" />
+    <ClInclude Include="chess_class\chess_bishop.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="KHR\khrplatform.h" />
     <ClInclude Include="main.h" />

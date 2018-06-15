@@ -1,8 +1,7 @@
 ﻿
 #include "main.h"
 #include "model.h"
-#include "ChessGunman.h"
-#include "ChessPawn.h"
+
 
 
 //unsigned int loadCubemap(vector<std::string> faces);
@@ -12,7 +11,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(8.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 0.5f, 1.3f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -21,7 +20,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
 
 
 
@@ -34,13 +33,16 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	//glEnable(GL_MULTISAMPLE);
+
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
 														 // glfw window creation
 														 // --------------------
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Solar System", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Cradle-of Grief", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -49,7 +51,7 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
+	//glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
@@ -70,9 +72,7 @@ int main()
 
 	// build and compile shaders
 	// -------------------------
-	Shader ourShader("model.vs", "model.fs");
-	Shader skyboxShader("starbox.vs", "starbox.fs");
-	Shader sunShader("sunmodel.vs", "sunmodel.fs");
+	Shader skyboxShader("shader/starbox.vs", "shader/starbox.fs");
 	float skyboxVertices[] = {
 		// positions          
 		-1.0f,  1.0f, -1.0f,
@@ -121,61 +121,66 @@ int main()
 
 	// load models
 	// -----------
-	Model EarModel("Chess/Bishop.obj");
 	//Chess *bishop_a = new ChessBishop(0, 0, 0, "Chess/Bishop.obj");
 
+	Model chess_board_model("models/chessboard/123.obj");
+
+
 	vector <Chess *> chess_list = {
-		new ChessKing(0, 0, 0, 0, "Chess/King.obj"),
-		new ChessKing(0, 0, 1, 0, "Chess/King.obj"),
-		new ChessKing(0, 0, 2, 0, "Chess/King.obj"),
-		new ChessQueen(0, 0, 0, 1, "Chess/Queen.obj"),
-		new ChessQueen(0, 0, 1, 1, "Chess/Queen.obj"),
-		new ChessQueen(0, 0, 2, 1, "Chess/Queen.obj"),
-		new ChessRook(0, 0, 0, 2, "Chess/Rook.obj"),
-		new ChessRook(0, 0, 1, 2, "Chess/Rook.obj"),
-		new ChessRook(0, 0, 2, 2, "Chess/Rook.obj"),
-		new ChessBishop(0, 0, 0, 3, "Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 1, 3, "Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 2, 3, "Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 0, 4, "Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 1, 4, "Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 2, 4, "Chess/Bishop.obj"),
-		new ChessKnight(0, 0, 0, 5, "Chess/Knight.obj"),
-		new ChessKnight(0, 0, 1, 5, "Chess/Knight.obj"),
-		new ChessKnight(0, 0, 2, 5, "Chess/Knight.obj"),
-		new ChessKnight(0, 0, 0, 6, "Chess/Knight.obj"),
-		new ChessKnight(0, 0, 1, 6, "Chess/Knight.obj"),
-		new ChessKnight(0, 0, 2, 6, "Chess/Knight.obj"),
-		new ChessViper(0, 0, 0, 7, "Chess/Viper.obj"),
-		new ChessViper(0, 0, 1, 7, "Chess/Viper.obj"),
-		new ChessViper(0, 0, 2, 7, "Chess/Viper.obj"),
-		new ChessWizard(0, 0, 0, 8, "Chess/Wizard.obj"),
-		new ChessWizard(0, 0, 1, 8, "Chess/Wizard.obj"),
-		new ChessWizard(0, 0, 2, 8, "Chess/Wizard.obj"),
-		new ChessGunman(0, 0, 0, 9, "Chess/Gunman.obj"),
-		new ChessGunman(0, 0, 1, 9, "Chess/Gunman.obj"),
-		new ChessGunman(0, 0, 2, 9, "Chess/Gunman.obj"),
-		new ChessPawn(0, 0, 0, 10, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 10, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 10, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 11, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 11, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 11, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 12, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 12, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 12, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 13, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 13, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 13, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 14, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 14, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 14, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 15, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 15, "Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 15, "Chess/Pawn.obj"),
+		new ChessKing(0, 0, 0, 0, "models/Chess/King.obj"),
+		new ChessKing(19, 23, 1, 0, "models/Chess/King.obj"),
+		new ChessKing(-3, 4, 2, 0, "models/Chess/King.obj"),
+		/*new ChessKing(-5, -4, 0, 0, "models/Chess/King.obj"),
+		new ChessKing(-4, -4, 1, 0, "models/Chess/King.obj"),
+		new ChessKing(-3, -4, 2, 0, "models/Chess/King.obj"),
+		new ChessQueen(-4, -4, 0, 1, "models/Chess/Queen.obj"),
+		new ChessQueen(0, 0, 1, 1, "models/Chess/Queen.obj"),
+		new ChessQueen(0, 0, 2, 1, "models/Chess/Queen.obj"),
+		new ChessRook(-3, -4, 0, 2, "models/Chess/Rook.obj"),
+		new ChessRook(0, 0, 1, 2, "models/Chess/Rook.obj"),
+		new ChessRook(0, 0, 2, 2, "models/Chess/Rook.obj"),
+		new ChessBishop(-2, -4, 0, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 1, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 2, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(-1, -4, 0, 4, "models/Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 1, 4, "models/Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 2, 4, "models/Chess/Bishop.obj"),
+		new ChessKnight(0, -4, 0, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(0, 0, 1, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(0, 0, 2, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(1, -4, 0, 6, "models/Chess/Knight.obj"),
+		new ChessKnight(0, 0, 1, 6, "models/Chess/Knight.obj"),
+		new ChessKnight(0, 0, 2, 6, "models/Chess/Knight.obj"),
+		new ChessViper(2, -4, 0, 7, "models/Chess/Viper.obj"),
+		new ChessViper(0, 0, 1, 7, "models/Chess/Viper.obj"),
+		new ChessViper(0, 0, 2, 7, "models/Chess/Viper.obj"),
+		new ChessWizard(3, -4, 0, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(0, 0, 1, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(0, 0, 2, 8, "models/Chess/Wizard.obj"),
+		new ChessGunman(4, -4, 0, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(0, 0, 1, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(0, 0, 2, 9, "models/Chess/Gunman.obj"),
+		new ChessPawn(5, -4, 0, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 15, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 15, "models/Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 15, "models/Chess/Pawn.obj")*/
 	};
 
-
+	//Model *chessboard = new Model("chessboard/Chessboard.obj");
 
 	unsigned int skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
@@ -233,36 +238,16 @@ int main()
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
 
+		show_chess_board(chess_board_model);
+		
 		show_chess(chess_list);
+
+
+
+
+
+
 		
-		
-		//// don't forget to enable shader before setting uniforms
-		//ourShader.use();
-
-		//ourShader.setVec3("objectColor", 0.8f, 0.8f, 0.0f);
-		//ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		//ourShader.setVec3("lightPos", lightPos);
-		//ourShader.setVec3("viewPos", camera.Position);
-
-
-		//glm::mat4 projection_sun = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		//glm::mat4 view_sun = camera.GetViewMatrix();
-		//ourShader.setMat4("projection", projection);
-		//ourShader.setMat4("view", view);
-
-		//
-		//glm::mat4 model1;    // earth model
-		//					 model1 = glm::translate(model1, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		//model1 = glm::scale(model1, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
-		//ourShader.setMat4("model", model1);
-		////EarModel.Draw(ourShader);
-		//(*bishop_a).show(ourShader);
-		//
-		
-
-
-
-
 
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.use();
@@ -320,23 +305,23 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
-}
+//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	if (firstMouse)
+//	{
+//		lastX = xpos;
+//		lastY = ypos;
+//		firstMouse = false;
+//	}
+//
+//	float xoffset = xpos - lastX;
+//	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+//
+//	lastX = xpos;
+//	lastY = ypos;
+//
+//	camera.ProcessMouseMovement(xoffset, yoffset);
+//}
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
@@ -349,7 +334,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void show_chess(std::vector<Chess *> &chess_list)
 {
-	Shader our_shader("model.vs", "model.fs");
+	Shader our_shader("shader/model.vs", "shader/model.fs");
 	// team 1, yellow
 	our_shader.use();
 	our_shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
@@ -362,8 +347,7 @@ void show_chess(std::vector<Chess *> &chess_list)
 	glm::mat4 view = camera.GetViewMatrix();
 
 	// view/projection transformations
-	glm::mat4 projection_sun = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 view_sun = camera.GetViewMatrix();
+
 	our_shader.setMat4("projection", projection);
 	our_shader.setMat4("view", view);
 	vector<Chess *>::iterator it = chess_list.begin();
@@ -373,32 +357,56 @@ void show_chess(std::vector<Chess *> &chess_list)
 		(*it)->get_model(model);
 		our_shader.setMat4("model", model);
 		(*it)->show(our_shader);
-		++it;
+		//++it;
+		it += 3;
 	}
 
 	// team2, green
 	our_shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
 	it = chess_list.begin();
+	++it;
 	while (it<chess_list.end())
 	{
 		glm::mat4 model;
 		(*it)->get_model(model);
 		our_shader.setMat4("model", model);
 		(*it)->show(our_shader);
-		++it;
+		it += 3;
 	}
 
 	// team3, red
 	our_shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
 	it = chess_list.begin();
+	it += 2;
 	while (it<chess_list.end())
 	{
 		glm::mat4 model;
 		(*it)->get_model(model);
 		our_shader.setMat4("model", model);
 		(*it)->show(our_shader);
-		++it;
+		it += 3;
 	}
+}
+
+void show_chess_board(Model &chess_board_model)
+{
+	Shader our_shader("shader/board-model.vs", "shader/board-model.fs");
+	our_shader.use();
+	const auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	const auto view = camera.GetViewMatrix();
+
+	// view/projection transformations
+
+	our_shader.setMat4("projection", projection);
+	our_shader.setMat4("view", view);
+
+	glm::mat4 board_model;
+	board_model = glm::rotate(board_model, 3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+	board_model = glm::scale(board_model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
+	our_shader.setMat4("model", board_model);
+	chess_board_model.Draw(our_shader);
+	
 }
 
 // -------------------------------------------------------

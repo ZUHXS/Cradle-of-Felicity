@@ -1,6 +1,6 @@
 ﻿#pragma once
 //#include "main.h"
-#include "model.h"
+#include "../model.h"
 
 class Chess
 {
