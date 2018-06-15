@@ -15,5 +15,19 @@
 #include <iostream>
 //#include "show_chess.hpp"
 #include "chess.h"
-
+#include "chess_Bishop.h"
+#include "ChessQueen.h"
+#include "ChessKing.h"
+#include "ChessRook.h"
+#include "ChessKnight.h"
+#include "ChessViper.h"
+#include "ChessWizard.h"
+using namespace std;
 #define MAX_CHESS_NUMBER 60
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow *window);
+void show_chess(std::vector<Chess *> &chess_list);

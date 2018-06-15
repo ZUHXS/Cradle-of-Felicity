@@ -19,7 +19,7 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	cor_x_ = init_cor_x;
 	cor_y_ = init_cor_y;
 	if_die_ = false;
-	pos_ = glm::vec3(0.0, 0.0, 0.0);
+	pos_ = glm::vec3(1.0, 1.0, 0.0);
 	rotation_ = glm::vec3(0.0, 0.0, 0.0);
 	scale_ = glm::vec3(0.05, 0.05, 0.05);
 }

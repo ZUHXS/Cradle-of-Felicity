@@ -1,18 +1,18 @@
-﻿#include "chess_bishop.h"
+﻿#include "chess_Bishop.h"
 
 
 
-chess_bishop::chess_bishop(int init_cor_x, int init_cor_y, int team, int id,string const &path,  bool gamma) : Chess(init_cor_x, init_cor_y, id, team, path, gamma)
+ChessBishop::ChessBishop(int init_cor_x, int init_cor_y, int team, int id,string const &path,  bool gamma) : Chess(init_cor_x, init_cor_y, id, team, path, gamma)
 {
 
 }
 
 
-chess_bishop::~chess_bishop()
+ChessBishop::~ChessBishop()
 {
 }
 
-void chess_bishop::show(Shader &input_shader)
+void ChessBishop::show(Shader &input_shader)
 {
 	if (check_live_status())
 	{

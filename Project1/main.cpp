@@ -1,15 +1,10 @@
 ﻿
 #include "main.h"
 #include "model.h"
-#include "chess_bishop.h"
+#include "ChessGunman.h"
+#include "ChessPawn.h"
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-void init_chess_list(vector<Chess *>chess_list);
-void show_chess(Chess &chess_total);
 //unsigned int loadCubemap(vector<std::string> faces);
 
 // settings
@@ -17,7 +12,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 8.0f, 0.0f));
+Camera camera(glm::vec3(8.0f, 0.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -58,7 +53,8 @@ int main()
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -126,13 +122,59 @@ int main()
 	// load models
 	// -----------
 	Model EarModel("Chess/Bishop.obj");
-	//Chess *bishop_a = new chess_bishop(0, 0, 0, "Chess/Bishop.obj");
+	//Chess *bishop_a = new ChessBishop(0, 0, 0, "Chess/Bishop.obj");
 
-	vector <Chess *> chess_list;
-	init_chess_list(chess_list);
-	//Chess *King_a = new chess_bishop(0, 0, 0, 0, "Chess/Bishop.obj");
-	//show_chess(*bishop_a);
-	//vector<Chess *> chess_total{ King_a };
+	vector <Chess *> chess_list = {
+		new ChessKing(0, 0, 0, 0, "Chess/King.obj"),
+		new ChessKing(0, 0, 1, 0, "Chess/King.obj"),
+		new ChessKing(0, 0, 2, 0, "Chess/King.obj"),
+		new ChessQueen(0, 0, 0, 1, "Chess/Queen.obj"),
+		new ChessQueen(0, 0, 1, 1, "Chess/Queen.obj"),
+		new ChessQueen(0, 0, 2, 1, "Chess/Queen.obj"),
+		new ChessRook(0, 0, 0, 2, "Chess/Rook.obj"),
+		new ChessRook(0, 0, 1, 2, "Chess/Rook.obj"),
+		new ChessRook(0, 0, 2, 2, "Chess/Rook.obj"),
+		new ChessBishop(0, 0, 0, 3, "Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 1, 3, "Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 2, 3, "Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 0, 4, "Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 1, 4, "Chess/Bishop.obj"),
+		new ChessBishop(0, 0, 2, 4, "Chess/Bishop.obj"),
+		new ChessKnight(0, 0, 0, 5, "Chess/Knight.obj"),
+		new ChessKnight(0, 0, 1, 5, "Chess/Knight.obj"),
+		new ChessKnight(0, 0, 2, 5, "Chess/Knight.obj"),
+		new ChessKnight(0, 0, 0, 6, "Chess/Knight.obj"),
+		new ChessKnight(0, 0, 1, 6, "Chess/Knight.obj"),
+		new ChessKnight(0, 0, 2, 6, "Chess/Knight.obj"),
+		new ChessViper(0, 0, 0, 7, "Chess/Viper.obj"),
+		new ChessViper(0, 0, 1, 7, "Chess/Viper.obj"),
+		new ChessViper(0, 0, 2, 7, "Chess/Viper.obj"),
+		new ChessWizard(0, 0, 0, 8, "Chess/Wizard.obj"),
+		new ChessWizard(0, 0, 1, 8, "Chess/Wizard.obj"),
+		new ChessWizard(0, 0, 2, 8, "Chess/Wizard.obj"),
+		new ChessGunman(0, 0, 0, 9, "Chess/Gunman.obj"),
+		new ChessGunman(0, 0, 1, 9, "Chess/Gunman.obj"),
+		new ChessGunman(0, 0, 2, 9, "Chess/Gunman.obj"),
+		new ChessPawn(0, 0, 0, 10, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 10, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 10, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 11, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 11, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 11, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 12, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 12, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 12, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 13, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 13, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 13, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 14, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 14, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 14, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 0, 15, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 1, 15, "Chess/Pawn.obj"),
+		new ChessPawn(0, 0, 2, 15, "Chess/Pawn.obj"),
+	};
+
 
 
 	unsigned int skyboxVAO, skyboxVBO;
@@ -191,7 +233,7 @@ int main()
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
 
-		
+		show_chess(chess_list);
 		
 		
 		//// don't forget to enable shader before setting uniforms
@@ -305,11 +347,12 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 
 
-void show_chess(Chess &chess_total)
+void show_chess(std::vector<Chess *> &chess_list)
 {
 	Shader our_shader("model.vs", "model.fs");
+	// team 1, yellow
 	our_shader.use();
-	our_shader.setVec3("objectColor", 0.8f, 0.8f, 0.0f);
+	our_shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
 	our_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 	our_shader.setVec3("lightPos", lightPos);
 	our_shader.setVec3("viewPos", camera.Position);
@@ -323,47 +366,40 @@ void show_chess(Chess &chess_total)
 	glm::mat4 view_sun = camera.GetViewMatrix();
 	our_shader.setMat4("projection", projection);
 	our_shader.setMat4("view", view);
-	
-	glm::mat4 model; 
-	chess_total.get_model(model);
+	vector<Chess *>::iterator it = chess_list.begin();
+	while(it<chess_list.end())
+	{
+		glm::mat4 model;
+		(*it)->get_model(model);
+		our_shader.setMat4("model", model);
+		(*it)->show(our_shader);
+		++it;
+	}
 
-	our_shader.setMat4("model", model);
+	// team2, green
+	our_shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+	it = chess_list.begin();
+	while (it<chess_list.end())
+	{
+		glm::mat4 model;
+		(*it)->get_model(model);
+		our_shader.setMat4("model", model);
+		(*it)->show(our_shader);
+		++it;
+	}
 
-	chess_total.show(our_shader);
+	// team3, red
+	our_shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+	it = chess_list.begin();
+	while (it<chess_list.end())
+	{
+		glm::mat4 model;
+		(*it)->get_model(model);
+		our_shader.setMat4("model", model);
+		(*it)->show(our_shader);
+		++it;
+	}
 }
-
-void init_chess_list(vector<Chess *>chess_list)
-{
-	chess_list.reserve(MAX_CHESS_NUMBER);
-
-	Chess *King_A = new chess_bishop(0, 0, 0, 0,"Chess/King.obj");
-	chess_list.push_back(King_A);
-	Chess *King_B = new chess_bishop(0, 0, 1, 0, "Chess/King.obj");
-	chess_list.push_back(King_B);
-	Chess *King_C = new chess_bishop(0, 0, 2, 0, "Chess/King.obj");
-	chess_list.push_back(King_C);
-
-	Chess *Queen_A = new chess_bishop(0, 0, 0, 1, "Chess/Queen.obj");
-	chess_list.push_back(King_A);
-	Chess *Queen_B = new chess_bishop(0, 0, 1, 1, "Chess/Queen.obj");
-	chess_list.push_back(King_B);
-	Chess *Queen_C = new chess_bishop(0, 0, 2, 1, "Chess/Queen.obj");
-	chess_list.push_back(King_C);
-
-	Chess *Rook_A = new chess_bishop(0, 0, 0, 2, "Chess/Rook.obj");
-	chess_list.push_back(King_A);
-	Chess *Rook_B = new chess_bishop(0, 0, 1, 2, "Chess/Rook.obj");
-	chess_list.push_back(King_B);
-	Chess *Rook_C = new chess_bishop(0, 0, 2, 2, "Chess/Rook.obj");
-	chess_list.push_back(King_C);
-
-
-
-
-}
-
-
-
 
 // -------------------------------------------------------
 //unsigned int loadCubemap(vector<std::string> faces)

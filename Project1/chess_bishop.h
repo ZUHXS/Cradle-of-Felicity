@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "chess.h"
 
-class chess_bishop : public Chess
+class ChessBishop : public Chess
 {
 public:
-	chess_bishop(int init_cor_x, int init_cor_y, int team, int id,string const &path,  bool gamma = false);
-	~chess_bishop();
+	ChessBishop(int init_cor_x, int init_cor_y, int team, int id, std::string const &path, bool gamma = false);
+	~ChessBishop();
 	virtual void show(Shader &input_shader);
 };
 

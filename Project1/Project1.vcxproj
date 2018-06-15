@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -127,14 +127,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chess.cpp" />
+    <ClCompile Include="ChessGunman.cpp" />
+    <ClCompile Include="ChessKnight.cpp" />
+    <ClCompile Include="ChessPawn.cpp" />
+    <ClCompile Include="ChessRook.cpp" />
+    <ClCompile Include="ChessViper.cpp" />
+    <ClCompile Include="ChessWizard.cpp" />
     <ClCompile Include="chess_bishop.cpp" />
+    <ClCompile Include="ChessKing.cpp" />
+    <ClCompile Include="ChessQueen.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chess.h" />
+    <ClInclude Include="ChessGunman.h" />
+    <ClInclude Include="ChessKnight.h" />
+    <ClInclude Include="ChessPawn.h" />
+    <ClInclude Include="ChessRook.h" />
+    <ClInclude Include="ChessViper.h" />
+    <ClInclude Include="ChessWizard.h" />
     <ClInclude Include="chess_bishop.h" />
+    <ClInclude Include="ChessKing.h" />
+    <ClInclude Include="ChessQueen.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="KHR\khrplatform.h" />
     <ClInclude Include="main.h" />

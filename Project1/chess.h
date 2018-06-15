@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "main.h"
+//#include "main.h"
 #include "model.h"
 
 class Chess

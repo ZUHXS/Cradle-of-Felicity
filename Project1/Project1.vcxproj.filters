@@ -30,6 +30,30 @@
     <ClCompile Include="model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ChessQueen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessKing.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessRook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessKnight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessViper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessWizard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessGunman.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessPawn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\glad.h">
@@ -48,6 +72,30 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessQueen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessKing.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessRook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessKnight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessViper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessWizard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessGunman.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessPawn.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
