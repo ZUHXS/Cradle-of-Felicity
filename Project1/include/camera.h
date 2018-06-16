@@ -22,6 +22,7 @@ const float SPEED       =  10.0f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
 
+const int gun_duration = 1000;
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -33,6 +34,12 @@ public:
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
+	
+	// used for gun
+	bool If_Move_Auto;
+	glm::vec3 move_origin_position;
+	glm::vec3 move_destination;
+
     // Euler Angles
     float Yaw;
     float Pitch;
@@ -47,7 +54,7 @@ public:
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-	glm::mat4 GetViewMatrix() const;
+	glm::mat4 GetViewMatrix();
 
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)

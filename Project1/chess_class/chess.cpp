@@ -1,12 +1,13 @@
 ﻿#include "chess.h"
 
-const void Chess::get_model(glm::mat4 & model)
+void Chess::get_model(glm::mat4 & model)
 {
-	model = glm::scale(model, scale_);
+	
+	model = glm::translate(model, pos_);
 	model = glm::rotate(model, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::rotate(model, rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, pos_);
+	model = glm::scale(model, scale_);
 }
 
 bool Chess::check_live_status() const
@@ -20,9 +21,9 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	cor_y_ = init_cor_y;
 	if_die_ = false;
 	//pos_ = glm::vec3(0.0, 0.0, 0.0);
-	pos_ = glm::vec3(static_cast<float>(init_cor_x), static_cast<float>(init_cor_y), 0.0f);
+	pos_ = glm::vec3(static_cast<float>(init_cor_x)/20.0f, 0.0f, static_cast<float>(init_cor_y)/20.0f);
 	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0);
 	//scale_ = glm::vec3(0.1, 0.1, 0.1);
 	//scale_ = glm::vec3(0.005, 0.005, 0.005);
-	scale_ = glm::vec3(0.1f, 0.1f, 0.1f);
+	scale_ = glm::vec3(0.05f, 0.05f, 0.05f);
 }

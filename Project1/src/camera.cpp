@@ -6,6 +6,9 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
+	If_Move_Auto = false;
+	move_origin_position = glm::vec3(1.9f, 1.3f, 2.3f);
+	move_destination = glm::vec3(-1.6f, 0.6f, 1.3f);
 	updateCameraVectors();
 }
 
@@ -18,10 +21,24 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	updateCameraVectors();
 }
 
-glm::mat4 Camera::GetViewMatrix() const
+glm::mat4 Camera::GetViewMatrix()
 {
 	//return glm::lookAt(Position, Position + Front, Up);
-	return glm::lookAt(Position, glm::vec3(0.0f, 0.0f, 0.0f), Up);
+	static int x = 0;
+	if(!If_Move_Auto)
+		return glm::lookAt(Position, glm::vec3(0.0f, 0.0f, 0.0f), Up);
+	else
+	{
+		x += 1;
+		if (x == gun_duration)
+		{
+			this->If_Move_Auto = false;
+			x = 0;
+		}
+		glm::vec3 gun_position(move_origin_position + ((move_destination - move_origin_position) / static_cast<float>(gun_duration)) * static_cast<float>(x));
+		glm::vec3 gun_front(move_destination - move_origin_position);
+		return glm::lookAt(gun_position, gun_front, Up);
+	}
 }
 
 

@@ -8,7 +8,7 @@ public:
 	Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, string const &path, const bool gamma = false);
 	virtual ~Chess() = default;
 	virtual void show(Shader &input_shader) = 0;
-	virtual const void get_model(glm::mat4& model);
+	virtual void get_model(glm::mat4& model);
 	bool check_live_status() const;
 	Model chess_model_;
 

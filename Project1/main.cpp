@@ -70,8 +70,8 @@ int main()
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
 
-	Shader simpleDepthShader("shader/3.1.3.shadow_mapping_depth.vs", "shader/3.1.3.shadow_mapping_depth.fs");
-	Shader debugDepthQuad("shader/3.1.3.debug_quad.vs", "shader/3.1.3.debug_quad_depth.fs");
+	Shader simpleDepthShader("shader/shadow_mapping_depth.vs", "shader/shadow_mapping_depth.fs");
+	Shader debugDepthQuad("shader/debug_quad.vs", "shader/debug_quad_depth.fs");
 
 	// build and compile shaders
 	// -------------------------
@@ -131,7 +131,7 @@ int main()
 
 	vector <Chess *> chess_list = {
 		new ChessKing(0, 0, 0, 0, "models/Chess/King.obj"),
-		new ChessKing(19, 23, 1, 0, "models/Chess/King.obj"),
+		new ChessKing(19, -23, 1, 0, "models/Chess/King.obj"),
 		new ChessKing(-3, 4, 2, 0, "models/Chess/King.obj"),
 		/*new ChessKing(-5, -4, 0, 0, "models/Chess/King.obj"),
 		new ChessKing(-4, -4, 1, 0, "models/Chess/King.obj"),
@@ -142,9 +142,9 @@ int main()
 		new ChessRook(-3, -4, 0, 2, "models/Chess/Rook.obj"),
 		new ChessRook(0, 0, 1, 2, "models/Chess/Rook.obj"),
 		new ChessRook(0, 0, 2, 2, "models/Chess/Rook.obj"),*/
-		new ChessBishop(-2, -7, 0, 3, "models/Chess/Bishop.obj"),
+		/*new ChessBishop(-2, -7, 0, 3, "models/Chess/Bishop.obj"),
 		new ChessBishop(-16, 12, 1, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(12, 4, 2, 3, "models/Chess/Bishop.obj"),/*
+		new ChessBishop(12, 4, 2, 3, "models/Chess/Bishop.obj"),
 		new ChessBishop(-1, -4, 0, 4, "models/Chess/Bishop.obj"),
 		new ChessBishop(0, 0, 1, 4, "models/Chess/Bishop.obj"),
 		new ChessBishop(0, 0, 2, 4, "models/Chess/Bishop.obj"),
@@ -153,17 +153,17 @@ int main()
 		new ChessKnight(0, 0, 2, 5, "models/Chess/Knight.obj"),
 		new ChessKnight(1, -4, 0, 6, "models/Chess/Knight.obj"),
 		new ChessKnight(0, 0, 1, 6, "models/Chess/Knight.obj"),
-		new ChessKnight(0, 0, 2, 6, "models/Chess/Knight.obj"),
+		new ChessKnight(0, 0, 2, 6, "models/Chess/Knight.obj"),*/
 		new ChessViper(2, -4, 0, 7, "models/Chess/Viper.obj"),
-		new ChessViper(0, 0, 1, 7, "models/Chess/Viper.obj"),
-		new ChessViper(0, 0, 2, 7, "models/Chess/Viper.obj"),
-		new ChessWizard(3, -4, 0, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(0, 0, 1, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(0, 0, 2, 8, "models/Chess/Wizard.obj"),
-		new ChessGunman(4, -4, 0, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(0, 0, 1, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(0, 0, 2, 9, "models/Chess/Gunman.obj"),
-		new ChessPawn(5, -4, 0, 10, "models/Chess/Pawn.obj"),
+		new ChessViper(5, 7, 1, 7, "models/Chess/Viper.obj"),
+		new ChessViper(2, 23, 2, 7, "models/Chess/Viper.obj"),
+		new ChessWizard(-12, -22, 0, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(-3, 23, 1, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(6, 14, 2, 8, "models/Chess/Wizard.obj"),
+		new ChessGunman(9, -16, 0, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(11, 11, 1, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(15, -16, 2, 9, "models/Chess/Gunman.obj"),
+		/*new ChessPawn(5, -4, 0, 10, "models/Chess/Pawn.obj"),
 		new ChessPawn(0, 0, 1, 10, "models/Chess/Pawn.obj"),
 		new ChessPawn(0, 0, 2, 10, "models/Chess/Pawn.obj"),
 		new ChessPawn(0, 0, 0, 11, "models/Chess/Pawn.obj"),
@@ -238,6 +238,7 @@ int main()
 	shader.setInt("shadowMap", 1);
 	debugDepthQuad.use();
 	debugDepthQuad.setInt("depthMap", 0);
+	//camera.If_Move_Auto = true;
 
 	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
 
@@ -271,7 +272,7 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
-
+		
 		
 		//show_chess(chess_list);
 
@@ -431,6 +432,8 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		camera.If_Move_Auto = true;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -494,6 +497,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader)
 
 	//our_shader.setMat4("projection", projection);
 	//our_shader.setMat4("view", view);
+	shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
 	vector<Chess *>::iterator it = chess_list.begin();
 	while(it<chess_list.end())
 	{
@@ -543,11 +547,11 @@ void show_chess_board(Model &chess_board_model, Shader &shader)
 
 	//our_shader.setMat4("projection", projection);
 	//our_shader.setMat4("view", view);
-
+	shader.setVec3("objectColor", 0.0f, 0.0f, 0.0f);
 	glm::mat4 board_model;
 	board_model = glm::rotate(board_model, 3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-	board_model = glm::scale(board_model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
+	board_model = glm::scale(board_model, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
 	shader.setMat4("model", board_model);
 	chess_board_model.Draw(shader);
 	
