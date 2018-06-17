@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChessBoard.cpp" />
     <ClCompile Include="chess_class\chess.cpp" />
     <ClCompile Include="chess_class\ChessGunman.cpp" />
     <ClCompile Include="chess_class\ChessKing.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\camera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChessBoard.h" />
     <ClInclude Include="chess_class\chess.h" />
     <ClInclude Include="chess_class\ChessGunman.h" />
     <ClInclude Include="chess_class\ChessKing.h" />

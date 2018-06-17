@@ -20,10 +20,11 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	cor_x_ = init_cor_x;
 	cor_y_ = init_cor_y;
 	if_die_ = false;
+	_if_explode = false;
 	//pos_ = glm::vec3(0.0, 0.0, 0.0);
-	pos_ = glm::vec3(static_cast<float>(init_cor_x)/20.0f, 0.0f, static_cast<float>(init_cor_y)/20.0f);
+	pos_ = glm::vec3(static_cast<float>(init_cor_x)/10.0f, 0.0f, static_cast<float>(init_cor_y)/10.0f);
 	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0);
 	//scale_ = glm::vec3(0.1, 0.1, 0.1);
 	//scale_ = glm::vec3(0.005, 0.005, 0.005);
-	scale_ = glm::vec3(0.05f, 0.05f, 0.05f);
+	scale_ = glm::vec3(0.1f, 0.1f, 0.1f);
 }

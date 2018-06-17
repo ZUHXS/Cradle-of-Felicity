@@ -22,7 +22,7 @@ const float SPEED       =  10.0f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
 
-const int gun_duration = 1000;
+const int move_duration = 1000;
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -39,6 +39,7 @@ public:
 	bool If_Move_Auto;
 	glm::vec3 move_origin_position;
 	glm::vec3 move_destination;
+	glm::vec3 destination_sight;
 
     // Euler Angles
     float Yaw;
@@ -47,6 +48,8 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+
+	int move_duration;
 
     // Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);

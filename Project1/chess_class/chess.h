@@ -11,6 +11,7 @@ public:
 	virtual void get_model(glm::mat4& model);
 	bool check_live_status() const;
 	Model chess_model_;
+	int _if_explode;
 
 
 private:

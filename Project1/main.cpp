@@ -1,8 +1,12 @@
 ﻿
 #include "main.h"
 #include "model.h"
+#include <stb_image.h>
 
-
+#define BLACK glm::vec3(0.001f, 0.0f, 0.0f)
+#define WHITE glm::vec3(1.0f, 1.0f, 1.0f)
+#define GRAY glm::vec3(0.8f, 0.8f, 0.8f)
+#define BLUE glm::vec3(0.0f, 162.0f/256.0f, 232.0f/256.0f)
 
 //unsigned int loadCubemap(vector<std::string> faces);
 
@@ -128,10 +132,137 @@ int main()
 
 	Model chess_board_model("models/chessboard/123.obj");
 
+	vector <ChessBoard *> Block_list = {
+		new ChessBoard("models/Board_Blocks/1.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/2.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/3.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/4.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/5.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/6.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/7.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/8.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/9.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/10.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/11.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/12.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/13.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/14.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/15.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/16.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/17.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/18.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/19.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/20.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/21.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/22.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/23.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/24.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/25.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/26.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/27.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/28.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/29.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/30.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/31.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/32.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/33.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/34.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/35.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/36.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/37.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/38.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/39.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/40.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/41.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/42.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/43.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/44.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/45.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/46.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/47.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/48.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/49.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/50.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/51.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/52.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/53.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/54.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/55.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/56.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/57.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/58.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/59.obj", WHITE),
+		//new ChessBoard("models/Board_Blocks/60.obj", BLACK)
+		new ChessBoard("models/Board_Blocks/61.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/62.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/63.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/64.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/65.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/66.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/67.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/68.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/69.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/70.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/71.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/72.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/73.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/74.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/75.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/76.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/77.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/78.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/79.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/80.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/81.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/82.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/83.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/84.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/85.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/86.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/87.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/88.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/89.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/90.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/91.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/92.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/93.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/94.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/95.obj", BLUE),
+		new ChessBoard("models/Board_Blocks/96.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/97.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/98.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/99.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/100.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/101.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/102.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/103.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/104.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/105.obj", GRAY),
+		new ChessBoard("models/Board_Blocks/106.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/107.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/108.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/109.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/110.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/111.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/112.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/113.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/114.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/115.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/116.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/117.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/118.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/119.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/120.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/121.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/122.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/123.obj", WHITE),
+		new ChessBoard("models/Board_Blocks/124.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/125.obj", BLACK)
+	};
 
 	vector <Chess *> chess_list = {
 		new ChessKing(0, 0, 0, 0, "models/Chess/King.obj"),
-		new ChessKing(19, -23, 1, 0, "models/Chess/King.obj"),
+		new ChessKing(25, -25, 1, 0, "models/Chess/King.obj"),
 		new ChessKing(-3, 4, 2, 0, "models/Chess/King.obj"),
 		/*new ChessKing(-5, -4, 0, 0, "models/Chess/King.obj"),
 		new ChessKing(-4, -4, 1, 0, "models/Chess/King.obj"),
@@ -197,15 +328,15 @@ int main()
 
 	vector<std::string> faces
 	{
-		"skybox/back.jpg",
-		"skybox/back.jpg",
-		"skybox/back.jpg",
-		"skybox/back.jpg",
-		"skybox/back.jpg",
-		"skybox/back.jpg"
+		"models/Board_Blocks/white.png",
+		"models/Board_Blocks/white.png",
+		"models/Board_Blocks/white.png",
+		"models/Board_Blocks/white.png",
+		"models/Board_Blocks/white.png",
+		"models/Board_Blocks/white.png"
 	};
 
-	//unsigned int cubemapTexture = loadCubemap(faces);
+	unsigned int cubemapTexture = loadCubemap(faces);
 
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
@@ -233,6 +364,10 @@ int main()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	Shader shader("shader/board-model.vs", "shader/board-model.fs");
+	Shader explode_shader("shader/explode.vs", "shader/explode.fs", "shader/explode.gs");
+	explode_shader.use();
+	explode_shader.setInt("diffuseTexture", 0);
+	explode_shader.setInt("shadowMap", 1);
 	shader.use();
 	shader.setInt("diffuseTexture", 0);
 	shader.setInt("shadowMap", 1);
@@ -278,60 +413,11 @@ int main()
 
 		//show_chess_board(chess_board_model);
 
-		process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
+		//process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
+		chess_list[4]->_if_explode = true;
+		process_scene(shader, simpleDepthShader, debugDepthQuad, explode_shader, chess_list, Block_list, depthMapFBO, depthMap);
 
 
-		//glm::mat4 lightProjection, lightView;
-		//glm::mat4 lightSpaceMatrix;
-		//float near_plane = 1.0f, far_plane = 7.5f;
-		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-		//lightSpaceMatrix = lightProjection * lightView;
-		//simpleDepthShader.use();
-		//simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-		//glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		//glClear(GL_DEPTH_BUFFER_BIT);
-		//glActiveTexture(GL_TEXTURE0);
-		//show_chess(chess_list, simpleDepthShader);
-		//show_chess_board(chess_board_model, simpleDepthShader);
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-		//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//shader.use();
-		//shader.setMat4("projection", projection);
-		//shader.setMat4("view", view);
-		//shader.setVec3("viewPos", camera.Position);
-		//shader.setVec3("lightPos", lightPos);
-		//shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-		//glActiveTexture(GL_TEXTURE0);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, depthMap);
-		//show_chess(chess_list, shader);
-		//show_chess_board(chess_board_model, shader);
-
-
-		//debugDepthQuad.use();
-		//debugDepthQuad.setFloat("near_plane", near_plane);
-		//debugDepthQuad.setFloat("far_plane", far_plane);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, depthMap);
-
-
-
-
-
-
-
-
-
-		
 
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.use();
@@ -339,12 +425,12 @@ int main()
 		skyboxShader.setMat4("view", view);
 		skyboxShader.setMat4("projection", projection);
 		// skybox cube
-		//glBindVertexArray(skyboxVAO);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-		//glDepthFunc(GL_LESS); // set depth function back to default
+		glBindVertexArray(skyboxVAO);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS); // set depth function back to default
 
 
 
@@ -362,14 +448,14 @@ int main()
 }
 
 
-void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::vector<Chess *> &chess_list, Model &chess_board_model, unsigned int &depthMapFBO, unsigned int &depthMap)
+void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap)
 {
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 	static glm::mat4 lightProjection, lightView;
 	static glm::mat4 lightSpaceMatrix;
 	const float near_plane = 1.0f;
-	const float far_plane = 7.5f;
+	const float far_plane = 10.5f;
 	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	lightSpaceMatrix = lightProjection * lightView;
@@ -381,7 +467,8 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
 	show_chess(chess_list, DepthShader);
-	show_chess_board(chess_board_model, DepthShader);
+	//show_chess_board(chess_board_model, DepthShader);
+	show_chess_board(block_list, DepthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -402,9 +489,19 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::
 	glActiveTexture(GL_TEXTURE0);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-	show_chess(chess_list, shader);
-	show_chess_board(chess_board_model, shader);
+	show_chess(chess_list, shader, true);
+	//show_chess_board(chess_board_model, shader);
+	show_chess_board(block_list, shader);
 
+	explode_shader.use();
+
+	explode_shader.setMat4("projection", projection);
+	explode_shader.setMat4("view", view);
+	explode_shader.setVec3("viewPos", camera.Position);
+	explode_shader.setVec3("lightPos", lightPos);
+	explode_shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	show_chess(chess_list, explode_shader, true, true);
 
 	DepthQuad.use();
 	DepthQuad.setFloat("near_plane", near_plane);
@@ -434,6 +531,14 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 		camera.If_Move_Auto = true;
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+	{
+		camera.move_destination = glm::vec3(0.0f, 10.0f, 0.0f);
+		camera.move_origin_position = camera.Position;
+		camera.destination_sight = glm::vec3(0.0f, 0.0f, 0.0f);
+		camera.move_duration = 500;
+		camera.If_Move_Auto = true;
+	}
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -479,60 +584,183 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 
 
-void show_chess(std::vector<Chess *> &chess_list, Shader &shader)
+void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode)
 {
-	//Shader our_shader("shader/model.vs", "shader/model.fs");
-	//// team 1, yellow
-	//our_shader.use();
-	//our_shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
-	//our_shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-	//our_shader.setVec3("lightPos", lightPos);
-	//our_shader.setVec3("viewPos", camera.Position);
-
-
-	//const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
-	//const glm::mat4 view = camera.GetViewMatrix();
-
-	//// view/projection transformations
-
-	//our_shader.setMat4("projection", projection);
-	//our_shader.setMat4("view", view);
+	static float counter = 0.00001f;
 	shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
-	vector<Chess *>::iterator it = chess_list.begin();
-	while(it<chess_list.end())
+	//shader.setFloat("time", glfwGetTime());
+	if (!if_real_time)
 	{
-		glm::mat4 model;
-		(*it)->get_model(model);
-		shader.setMat4("model", model);
-		(*it)->show(shader);
-		//++it;
-		it += 3;
-	}
+		vector<Chess *>::iterator it = chess_list.begin();
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
 
-	// team2, green
-	shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
-	it = chess_list.begin();
-	++it;
-	while (it<chess_list.end())
-	{
-		glm::mat4 model;
-		(*it)->get_model(model);
-		shader.setMat4("model", model);
-		(*it)->show(shader);
-		it += 3;
-	}
+		// team2, green
+		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		it = chess_list.begin();
+		++it;
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
 
-	// team3, red
-	shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
-	it = chess_list.begin();
-	it += 2;
-	while (it<chess_list.end())
+		// team3, red
+		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		it = chess_list.begin();
+		it += 2;
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+		return;
+	}
+	if (!if_explode)
 	{
-		glm::mat4 model;
-		(*it)->get_model(model);
-		shader.setMat4("model", model);
-		(*it)->show(shader);
-		it += 3;
+		vector<Chess *>::iterator it = chess_list.begin();
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			if ((*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+
+		// team2, green
+		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		it = chess_list.begin();
+		++it;
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			if ((*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+
+		// team3, red
+		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		it = chess_list.begin();
+		it += 2;
+		while (it<chess_list.end())
+		{
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			if ((*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+		return;
+	}
+	else
+	{
+		vector<Chess *>::iterator it = chess_list.begin();
+		while (it<chess_list.end())
+		{
+			if (!(*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			counter *= 2;
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			if (counter >= 3.14f) {
+				counter = 0.01;
+				(*it)->_if_explode = false;
+			}
+			shader.setFloat("time", counter);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+
+		// team2, green
+		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		it = chess_list.begin();
+		++it;
+		while (it<chess_list.end())
+		{
+			if (!(*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			counter *= 2;
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			if (counter >= 3.14f) {
+				counter = 0.01;
+				(*it)->_if_explode = false;
+			}
+			shader.setFloat("time", counter);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
+
+		// team3, red
+		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		it = chess_list.begin();
+		it += 2;
+		while (it<chess_list.end())
+		{
+			if (!(*it)->_if_explode)
+			{
+				it += 3;
+				continue;
+			}
+			counter *= 2;
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model); 
+			if (counter >= 3.14f) {
+				counter = 0.01;
+				(*it)->_if_explode = false;
+			}
+			shader.setFloat("time", counter);
+			(*it)->show(shader);
+			//++it;
+			it += 3;
+		}
 	}
 }
 
@@ -551,53 +779,70 @@ void show_chess_board(Model &chess_board_model, Shader &shader)
 	glm::mat4 board_model;
 	board_model = glm::rotate(board_model, 3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-	board_model = glm::scale(board_model, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
+	board_model = glm::scale(board_model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
 	shader.setMat4("model", board_model);
 	chess_board_model.Draw(shader);
 	
 }
 
-// -------------------------------------------------------
-//unsigned int loadCubemap(vector<std::string> faces)
-//{
-//	unsigned int textureID;
-//	glGenTextures(1, &textureID);
-//	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-//
-//	int width, height, nrChannels;
-//	for (unsigned int i = 0; i < faces.size(); i++)
-//	{
-//		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-//		if (data)
-//		{
-//			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-//			stbi_image_free(data);
-//		}
-//		else
-//		{
-//			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-//			stbi_image_free(data);
-//		}
-//	}
-//	for (unsigned int i = 0; i < faces.size(); i++)
-//	{
-//		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-//		if (data)
-//		{
-//			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-//			stbi_image_free(data);
-//		}
-//		else
-//		{
-//			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-//			stbi_image_free(data);
-//		}
-//	}
-//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-//
-//	return textureID;
-//}
+void show_chess_board(std::vector<ChessBoard *> &block_list, Shader &shader)
+{
+	//shader.setVec3("objectColor", 0.0f, 0.0f, 0.0f);
+	shader.setFloat("time", glfwGetTime());
+	vector<ChessBoard *>::iterator it = block_list.begin();
+	while (it<block_list.end())
+	{
+		shader.setVec3("objectColor", (*it)->block_color);
+		glm::mat4 model;
+		(*it)->get_model(model);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
+		//++it;
+		it += 1;
+	}
+
+}
+
+unsigned int loadCubemap(vector<std::string> faces)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}
