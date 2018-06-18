@@ -22,7 +22,7 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	if_die_ = false;
 	_if_explode = false;
 	//pos_ = glm::vec3(0.0, 0.0, 0.0);
-	pos_ = glm::vec3(static_cast<float>(init_cor_x)/10.0f, 0.0f, static_cast<float>(init_cor_y)/10.0f);
+	pos_ = glm::vec3(vertice_coordinate[init_cor_x + 9][init_cor_y + 5][0], vertice_coordinate[init_cor_x + 9][init_cor_y + 5][1], vertice_coordinate[init_cor_x + 9][init_cor_y + 5][2]);
 	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0);
 	//scale_ = glm::vec3(0.1, 0.1, 0.1);
 	//scale_ = glm::vec3(0.005, 0.005, 0.005);

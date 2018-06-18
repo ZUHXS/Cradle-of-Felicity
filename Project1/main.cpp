@@ -261,57 +261,54 @@ int main()
 	};
 
 	vector <Chess *> chess_list = {
-		new ChessKing(0, 0, 0, 0, "models/Chess/King.obj"),
-		new ChessKing(25, -25, 1, 0, "models/Chess/King.obj"),
-		new ChessKing(-3, 4, 2, 0, "models/Chess/King.obj"),
-		/*new ChessKing(-5, -4, 0, 0, "models/Chess/King.obj"),
-		new ChessKing(-4, -4, 1, 0, "models/Chess/King.obj"),
-		new ChessKing(-3, -4, 2, 0, "models/Chess/King.obj"),
-		new ChessQueen(-4, -4, 0, 1, "models/Chess/Queen.obj"),
-		new ChessQueen(0, 0, 1, 1, "models/Chess/Queen.obj"),
-		new ChessQueen(0, 0, 2, 1, "models/Chess/Queen.obj"),
-		new ChessRook(-3, -4, 0, 2, "models/Chess/Rook.obj"),
-		new ChessRook(0, 0, 1, 2, "models/Chess/Rook.obj"),
-		new ChessRook(0, 0, 2, 2, "models/Chess/Rook.obj"),*/
-		/*new ChessBishop(-2, -7, 0, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(-16, 12, 1, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(12, 4, 2, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(-1, -4, 0, 4, "models/Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 1, 4, "models/Chess/Bishop.obj"),
-		new ChessBishop(0, 0, 2, 4, "models/Chess/Bishop.obj"),
-		new ChessKnight(0, -4, 0, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(0, 0, 1, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(0, 0, 2, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(1, -4, 0, 6, "models/Chess/Knight.obj"),
-		new ChessKnight(0, 0, 1, 6, "models/Chess/Knight.obj"),
-		new ChessKnight(0, 0, 2, 6, "models/Chess/Knight.obj"),*/
-		new ChessViper(2, -4, 0, 7, "models/Chess/Viper.obj"),
-		new ChessViper(5, 7, 1, 7, "models/Chess/Viper.obj"),
-		new ChessViper(2, 23, 2, 7, "models/Chess/Viper.obj"),
-		new ChessWizard(-12, -22, 0, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(-3, 23, 1, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(6, 14, 2, 8, "models/Chess/Wizard.obj"),
-		new ChessGunman(9, -16, 0, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(11, 11, 1, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(15, -16, 2, 9, "models/Chess/Gunman.obj"),
-		/*new ChessPawn(5, -4, 0, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 0, 15, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 1, 15, "models/Chess/Pawn.obj"),
-		new ChessPawn(0, 0, 2, 15, "models/Chess/Pawn.obj")*/
+		new ChessKing(1, -5, 0, 0, "models/Chess/King.obj"),
+		new ChessKing(7, 3, 1, 0, "models/Chess/King.obj"),
+		new ChessKing(-8, 2, 2, 0, "models/Chess/King.obj"),
+		new ChessQueen(2, -5, 0, 1, "models/Chess/Queen.obj"),
+		new ChessQueen(6, 3, 1, 1, "models/Chess/Queen.obj"),
+		new ChessQueen(-8, 1, 2, 1, "models/Chess/Queen.obj"),
+		new ChessRook(0, -4, 0, 2, "models/Chess/Rook.obj"),
+		new ChessRook(6, 2, 1, 2, "models/Chess/Rook.obj"),
+		new ChessRook(-6, 2, 2, 2, "models/Chess/Rook.obj"),
+		new ChessBishop(-1, -5, 0, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(8, 2, 1, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(-6, 4, 2, 3, "models/Chess/Bishop.obj"),
+		new ChessBishop(-3, -5, 0, 4, "models/Chess/Bishop.obj"),
+		new ChessBishop(9, 1, 1, 4, "models/Chess/Bishop.obj"),
+		new ChessBishop(-7, 3, 2, 4, "models/Chess/Bishop.obj"),
+		new ChessKnight(-2, -4, 0, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(7, 1, 1, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(-5, 3, 2, 5, "models/Chess/Knight.obj"),
+		new ChessKnight(2, -4, 0, 6, "models/Chess/Knight.obj"),
+		new ChessKnight(5, 3, 1, 6, "models/Chess/Knight.obj"),
+		new ChessKnight(-7, 1, 2, 6, "models/Chess/Knight.obj"),
+		new ChessViper(4, -4, 0, 7, "models/Chess/Viper.obj"),
+		new ChessViper(4, 4, 1, 7, "models/Chess/Viper.obj"),
+		new ChessViper(-8, 0, 2, 7, "models/Chess/Viper.obj"),
+		new ChessWizard(0, -5, 0, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(7, 2, 1, 8, "models/Chess/Wizard.obj"),
+		new ChessWizard(-7, 2, 2, 8, "models/Chess/Wizard.obj"),
+		new ChessGunman(-2, -5, 0, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(8, 1, 1, 9, "models/Chess/Gunman.obj"),
+		new ChessGunman(-6, 3, 2, 9, "models/Chess/Gunman.obj"),
+		new ChessPawn(-5, -4, 0, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(3, 4, 1, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(-8, -1, 2, 10, "models/Chess/Pawn.obj"),
+		new ChessPawn(-3, -4, 0, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(4, 3, 1, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(-7, 0, 2, 11, "models/Chess/Pawn.obj"),
+		new ChessPawn(-1, -4, 0, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(5, 2, 1, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(-6, 1, 2, 12, "models/Chess/Pawn.obj"),
+		new ChessPawn(1, -4, 0, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(6, 1, 1, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(-5, 2, 2, 13, "models/Chess/Pawn.obj"),
+		new ChessPawn(3, -4, 0, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(7, 0, 1, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(-4, 3, 2, 14, "models/Chess/Pawn.obj"),
+		new ChessPawn(5, -4, 0, 15, "models/Chess/Pawn.obj"),
+		new ChessPawn(8, -1, 1, 15, "models/Chess/Pawn.obj"),
+		new ChessPawn(-3, 4, 2, 15, "models/Chess/Pawn.obj")
 	};
 
 	//Model *chessboard = new Model("chessboard/Chessboard.obj");
@@ -414,7 +411,6 @@ int main()
 		//show_chess_board(chess_board_model);
 
 		//process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
-		chess_list[4]->_if_explode = true;
 		process_scene(shader, simpleDepthShader, debugDepthQuad, explode_shader, chess_list, Block_list, depthMapFBO, depthMap);
 
 
@@ -510,6 +506,7 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 
 }
+
 
 
 
