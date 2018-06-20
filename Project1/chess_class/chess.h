@@ -12,6 +12,7 @@ public:
 	bool check_live_status() const;
 	Model chess_model_;
 	int _if_explode;
+	bool if_selected_;
 
 
 private:

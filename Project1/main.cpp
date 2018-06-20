@@ -7,6 +7,14 @@
 #define WHITE glm::vec3(1.0f, 1.0f, 1.0f)
 #define GRAY glm::vec3(0.8f, 0.8f, 0.8f)
 #define BLUE glm::vec3(0.0f, 162.0f/256.0f, 232.0f/256.0f)
+//#define CHESS_COLOR1 (192.0f/255.0f, 160.0f/255.0f, 170.0f/255.0f)
+//#define CHESS_COLOR2 (255.0f/255.0f, 216.0f/255.0f, 169.0f/255.0f)
+//#define CHESS_COLOR3 (117.0f/255.0f, 171.0f/255.0f, 242.0f/255.0f)
+
+#define CHESS_COLOR1 (0.0f, 0.0f, 0.0f)
+#define CHESS_COLOR2 (0.0f, 0.0f, 0.0f)
+#define CHESS_COLOR3 (0.0f, 0.0f, 0.0f)
+
 
 //unsigned int loadCubemap(vector<std::string> faces);
 
@@ -15,7 +23,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.5f, 1.3f));
+Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -44,7 +52,7 @@ int main()
 
 														 // glfw window creation
 														 // --------------------
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Cradle-of Grief", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Cradle-of-Felicity", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -73,6 +81,9 @@ int main()
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	Shader simpleDepthShader("shader/shadow_mapping_depth.vs", "shader/shadow_mapping_depth.fs");
 	Shader debugDepthQuad("shader/debug_quad.vs", "shader/debug_quad_depth.fs");
@@ -130,7 +141,7 @@ int main()
 	// -----------
 	//Chess *bishop_a = new ChessBishop(0, 0, 0, "Chess/Bishop.obj");
 
-	Model chess_board_model("models/chessboard/123.obj");
+	//Model chess_board_model("models/chessboard/123.obj");
 
 	vector <ChessBoard *> Block_list = {
 		new ChessBoard("models/Board_Blocks/1.obj", BLACK),
@@ -196,7 +207,7 @@ int main()
 		new ChessBoard("models/Board_Blocks/61.obj", BLACK),
 		new ChessBoard("models/Board_Blocks/62.obj", WHITE),
 		new ChessBoard("models/Board_Blocks/63.obj", BLACK),
-		new ChessBoard("models/Board_Blocks/64.obj", BLACK),
+		new ChessBoard("models/Board_Blocks/64.obj", WHITE),
 		new ChessBoard("models/Board_Blocks/65.obj", GRAY),
 		new ChessBoard("models/Board_Blocks/66.obj", WHITE),
 		new ChessBoard("models/Board_Blocks/67.obj", BLACK),
@@ -335,6 +346,8 @@ int main()
 
 	unsigned int cubemapTexture = loadCubemap(faces);
 
+
+
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
@@ -362,6 +375,21 @@ int main()
 
 	Shader shader("shader/board-model.vs", "shader/board-model.fs");
 	Shader explode_shader("shader/explode.vs", "shader/explode.fs", "shader/explode.gs");
+
+
+	Shader shaderSingleColor("shader/2.stencil_testing.vs", "shader/2.stencil_single_color.fs");
+
+	Shader select_shader("shader/geometry_select.vs", "shader/geometry_select.fs", "shader/geometry_select.gs");
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+
+	shaderSingleColor.use();
+
+	shaderSingleColor.setMat4("view", view);
+	shaderSingleColor.setMat4("projection", projection);
+
+
 	explode_shader.use();
 	explode_shader.setInt("diffuseTexture", 0);
 	explode_shader.setInt("shadowMap", 1);
@@ -370,6 +398,8 @@ int main()
 	shader.setInt("shadowMap", 1);
 	debugDepthQuad.use();
 	debugDepthQuad.setInt("depthMap", 0);
+
+
 	//camera.If_Move_Auto = true;
 
 	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
@@ -396,12 +426,11 @@ int main()
 
 		// render
 		// ------
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		//sunShader.use();
-		const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
 		
@@ -411,22 +440,49 @@ int main()
 		//show_chess_board(chess_board_model);
 
 		//process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
-		process_scene(shader, simpleDepthShader, debugDepthQuad, explode_shader, chess_list, Block_list, depthMapFBO, depthMap);
+		
 
+		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		//glStencilMask(0xFF);
+		process_scene(shader, simpleDepthShader, debugDepthQuad, select_shader, explode_shader, chess_list, Block_list, depthMapFBO, depthMap);
 
+		/*shaderSingleColor.use();
+		float scale = 1.1;
+		const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		shaderSingleColor.setMat4("view", view);
+		shaderSingleColor.setMat4("projection", projection);
 
-		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-		skyboxShader.use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
-		skyboxShader.setMat4("view", view);
-		skyboxShader.setMat4("projection", projection);
-		// skybox cube
-		glBindVertexArray(skyboxVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		shaderSingleColor.use();
+
+		shaderSingleColor.use();
+		glm::mat4 model1;
+		chess_list[0]->get_model(model1);
+		model1 = glm::scale(model1, glm::vec3(scale, scale, scale));
+		shaderSingleColor.setMat4("model", model1);
+		chess_list[0]->chess_model_.Draw(shaderSingleColor);
 		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // set depth function back to default
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);*/
+
+
+
+
+		//glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		//skyboxShader.use();
+		//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+		//skyboxShader.setMat4("view", view);
+		//skyboxShader.setMat4("projection", projection);
+		//// skybox cube
+		//glBindVertexArray(skyboxVAO);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindVertexArray(0);
+		//glDepthFunc(GL_LESS); // set depth function back to default
 
 
 
@@ -444,8 +500,11 @@ int main()
 }
 
 
-void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap)
+void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &select_shader, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap)
 {
+
+	chess_list[23]->if_selected_ = true;
+
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 	static glm::mat4 lightProjection, lightView;
@@ -460,7 +519,7 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
 	show_chess(chess_list, DepthShader);
 	//show_chess_board(chess_board_model, DepthShader);
@@ -471,10 +530,15 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+
 	const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
+
+	//select_shader.use();
+
+	glStencilMask(0x00);
+
 	shader.use();
 	
 	shader.setMat4("projection", projection);
@@ -485,9 +549,21 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glActiveTexture(GL_TEXTURE0);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-	show_chess(chess_list, shader, true);
 	//show_chess_board(chess_board_model, shader);
+
+	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	//glStencilMask(0xFF);  // used for select
+	glStencilMask(0x00);
+
 	show_chess_board(block_list, shader);
+	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	//glStencilMask(0xFF);
+
+	show_chess(chess_list, shader, true);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilMask(0xFF);
+
+	process_selected(shader, chess_list);
 
 	explode_shader.use();
 
@@ -498,6 +574,24 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	explode_shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	show_chess(chess_list, explode_shader, true, true);
+
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_BLEND);
+	select_shader.use();
+	select_shader.setMat4("projection", projection);
+	select_shader.setMat4("view", view);
+	glm::mat4 model = glm::mat4();
+	chess_list[23]->get_model(model);
+	select_shader.setMat4("model", model);
+	select_shader.setFloat("time", 0.2);
+	chess_list[23]->chess_model_.Draw(select_shader);
+
+
+	glBindVertexArray(0);
+	glStencilMask(0xFF);
+	glEnable(GL_DEPTH_TEST);
 
 	DepthQuad.use();
 	DepthQuad.setFloat("near_plane", near_plane);
@@ -579,18 +673,78 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
+void process_selected(Shader &shader, std::vector<Chess *> &chess_list)
+{
+	vector<Chess *>::iterator it = chess_list.begin();
+	glm::vec3 color1 CHESS_COLOR1;
+	shader.setVec3("objectColor", color1);
+	while (it<chess_list.end())
+	{
+		if (!(*it)->if_selected_) {
+			it += 3;
+			continue;
+		}
+		// team1, yellow
+		glm::mat4 model;
+		(*it)->get_model(model);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
+		//++it;
+		it += 3;
+	}
 
+	// team2, blue
+	glm::vec3 color2 CHESS_COLOR2;
+	shader.setVec3("objectColor", color2);
+	it = chess_list.begin();
+	++it;
+	while (it<chess_list.end())
+	{
+		if (!(*it)->if_selected_) {
+			it += 3;
+			continue;
+		}
+		glm::mat4 model;
+		(*it)->get_model(model);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
+		//++it;
+		it += 3;
+	}
+
+	// team3, red
+	glm::vec3 color3 CHESS_COLOR3;
+	shader.setVec3("objectColor", color3);
+	it = chess_list.begin();
+	it += 2;
+	while (it<chess_list.end())
+	{
+		if (!(*it)->if_selected_) {
+			it += 3;
+			continue;
+		}
+		glm::mat4 model;
+		(*it)->get_model(model);
+		shader.setMat4("model", model);
+		(*it)->show(shader);
+		//++it;
+		it += 3;
+	}
+	return;
+}
 
 void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode)
 {
 	static float counter = 0.00001f;
-	shader.setVec3("objectColor", 1.0f, 0.8f, 0.0f);
 	//shader.setFloat("time", glfwGetTime());
 	if (!if_real_time)
 	{
 		vector<Chess *>::iterator it = chess_list.begin();
+		glm::vec3 color1 CHESS_COLOR1;
+		shader.setVec3("objectColor", color1);
 		while (it<chess_list.end())
 		{
+			// team1, yellow
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
@@ -599,8 +753,9 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 			it += 3;
 		}
 
-		// team2, green
-		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		// team2, blue
+		glm::vec3 color2 CHESS_COLOR2;
+		shader.setVec3("objectColor", color2); 
 		it = chess_list.begin();
 		++it;
 		while (it<chess_list.end())
@@ -614,7 +769,8 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		}
 
 		// team3, red
-		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		glm::vec3 color3 CHESS_COLOR3;
+		shader.setVec3("objectColor", color3);
 		it = chess_list.begin();
 		it += 2;
 		while (it<chess_list.end())
@@ -633,52 +789,71 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		vector<Chess *>::iterator it = chess_list.begin();
 		while (it<chess_list.end())
 		{
-			glm::mat4 model;
-			(*it)->get_model(model);
-			shader.setMat4("model", model);
+			if ((*it)->if_selected_) {
+				it += 3;
+				continue;
+			}
 			if ((*it)->_if_explode)
 			{
 				it += 3;
 				continue;
 			}
+			glm::vec3 color1 CHESS_COLOR1;
+			shader.setVec3("objectColor", color1); 
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+
 			(*it)->show(shader);
 			//++it;
 			it += 3;
 		}
 
 		// team2, green
-		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		glm::vec3 color2 CHESS_COLOR2;
+		shader.setVec3("objectColor", color2);
 		it = chess_list.begin();
 		++it;
 		while (it<chess_list.end())
 		{
-			glm::mat4 model;
-			(*it)->get_model(model);
-			shader.setMat4("model", model);
+			if ((*it)->if_selected_) {
+				it += 3;
+				continue;
+			}
 			if ((*it)->_if_explode)
 			{
 				it += 3;
 				continue;
 			}
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+
 			(*it)->show(shader);
 			//++it;
 			it += 3;
 		}
 
 		// team3, red
-		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		glm::vec3 color3 CHESS_COLOR3;
+		shader.setVec3("objectColor", color3);
 		it = chess_list.begin();
 		it += 2;
 		while (it<chess_list.end())
 		{
-			glm::mat4 model;
-			(*it)->get_model(model);
-			shader.setMat4("model", model);
+			if ((*it)->if_selected_) {
+				it += 3;
+				continue;
+			}
 			if ((*it)->_if_explode)
 			{
 				it += 3;
 				continue;
 			}
+			glm::mat4 model;
+			(*it)->get_model(model);
+			shader.setMat4("model", model);
+			
 			(*it)->show(shader);
 			//++it;
 			it += 3;
@@ -690,6 +865,8 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		vector<Chess *>::iterator it = chess_list.begin();
 		while (it<chess_list.end())
 		{
+			glm::vec3 color1 CHESS_COLOR1;
+			shader.setVec3("objectColor", color1);
 			if (!(*it)->_if_explode)
 			{
 				it += 3;
@@ -710,7 +887,8 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		}
 
 		// team2, green
-		shader.setVec3("objectColor", 0.0f, 1.0f, 0.0f);
+		glm::vec3 color2 CHESS_COLOR2;
+		shader.setVec3("objectColor", color2);
 		it = chess_list.begin();
 		++it;
 		while (it<chess_list.end())
@@ -735,7 +913,8 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		}
 
 		// team3, red
-		shader.setVec3("objectColor", 1.0f, 0.2f, 0.1f);
+		glm::vec3 color3 CHESS_COLOR3;
+		shader.setVec3("objectColor", color3);
 		it = chess_list.begin();
 		it += 2;
 		while (it<chess_list.end())

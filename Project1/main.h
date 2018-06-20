@@ -37,4 +37,5 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 void show_chess_board(Model &chess_board_model, Shader &shader);
 void show_chess_board(std::vector<ChessBoard *> &block_list, Shader &shader);
 //void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, std::vector<Chess *> &chess_list, Model &chess_board_model, unsigned int &depthMapFBO, unsigned int &depthMap);
-void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap);
+void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &select_shader, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap);
+void process_selected(Shader &shader, std::vector<Chess *> &chess_list);
