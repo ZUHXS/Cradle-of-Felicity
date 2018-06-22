@@ -86,7 +86,7 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 }
 
 
-void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
+void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Chess *> chess_list, GLboolean constrainPitch)
 {
 	xoffset *= MouseSensitivity;
 	yoffset *= MouseSensitivity;

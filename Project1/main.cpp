@@ -391,8 +391,8 @@ int main()
 
 
 	explode_shader.use();
-	explode_shader.setInt("diffuseTexture", 0);
-	explode_shader.setInt("shadowMap", 1);
+	//explode_shader.setInt("diffuseTexture", 0);
+	//explode_shader.setInt("shadowMap", 1);
 	shader.use();
 	shader.setInt("diffuseTexture", 0);
 	shader.setInt("shadowMap", 1);
@@ -422,7 +422,7 @@ int main()
 
 		// input
 		// -----
-		processInput(window);
+		processInput(window, chess_list);
 
 		// render
 		// ------
@@ -569,9 +569,9 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	explode_shader.setMat4("projection", projection);
 	explode_shader.setMat4("view", view);
-	explode_shader.setVec3("viewPos", camera.Position);
-	explode_shader.setVec3("lightPos", lightPos);
-	explode_shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	//explode_shader.setVec3("viewPos", camera.Position);
+	//explode_shader.setVec3("lightPos", lightPos);
+	//explode_shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	show_chess(chess_list, explode_shader, true, true);
 
@@ -607,7 +607,7 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -630,6 +630,38 @@ void processInput(GLFWwindow *window)
 		camera.move_duration = 500;
 		camera.If_Move_Auto = true;
 	}
+	if (glfwGetKey(window ,GLFW_KEY_1) == GLFW_PRESS)
+	{
+		chess_list[5]->get_moving_function(0, 0);
+	}
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+	{
+		chess_list[23]->get_moving_function(2, 2);
+	}
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+	{
+		chess_list[14]->get_moving_function(-4, 0);
+	}
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+	{
+		chess_list[16]->get_moving_function(1, -1);
+	}
+	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
+	{
+		chess_list[21]->get_moving_function(4, -1);
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+	{
+		chess_list[5]->_if_explode = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+	{
+		chess_list[10]->_if_explode = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+	{
+		chess_list[15]->_if_explode = true;
+	}
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -645,26 +677,23 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos, std::vector<Chess *>chess_list)
+{
+	//if (firstMouse)
+	//{
+	//	lastX = xpos;
+	//	lastY = ypos;
+	//	firstMouse = false;
+	//}
 
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	if (firstMouse)
-//	{
-//		lastX = xpos;
-//		lastY = ypos;
-//		firstMouse = false;
-//	}
-//
-//	float xoffset = xpos - lastX;
-//	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-//
-//	lastX = xpos;
-//	lastY = ypos;
-//
-//	camera.ProcessMouseMovement(xoffset, yoffset);
-//}
+	//float xoffset = xpos - lastX;
+	//float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	//lastX = xpos;
+	//lastY = ypos;
+
+	camera.ProcessMouseMovement(xpos, ypos, chess_list);
+}
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
@@ -735,7 +764,7 @@ void process_selected(Shader &shader, std::vector<Chess *> &chess_list)
 
 void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode)
 {
-	static float counter = 0.00001f;
+	static float counter = 0.1f;
 	//shader.setFloat("time", glfwGetTime());
 	if (!if_real_time)
 	{
@@ -744,6 +773,11 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		shader.setVec3("objectColor", color1);
 		while (it<chess_list.end())
 		{
+			if((*it)->check_death())
+			{
+				it += 3;
+				continue;
+			}
 			// team1, yellow
 			glm::mat4 model;
 			(*it)->get_model(model);
@@ -760,6 +794,11 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		++it;
 		while (it<chess_list.end())
 		{
+			if ((*it)->check_death())
+			{
+				it += 3;
+				continue;
+			}
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
@@ -775,6 +814,11 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		it += 2;
 		while (it<chess_list.end())
 		{
+			if ((*it)->check_death())
+			{
+				it += 3;
+				continue;
+			}
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
@@ -789,12 +833,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		vector<Chess *>::iterator it = chess_list.begin();
 		while (it<chess_list.end())
 		{
-			if ((*it)->if_selected_) {
-				it += 3;
-				continue;
-			}
-			if ((*it)->_if_explode)
-			{
+			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
@@ -816,12 +855,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		++it;
 		while (it<chess_list.end())
 		{
-			if ((*it)->if_selected_) {
-				it += 3;
-				continue;
-			}
-			if ((*it)->_if_explode)
-			{
+			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
@@ -841,12 +875,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		it += 2;
 		while (it<chess_list.end())
 		{
-			if ((*it)->if_selected_) {
-				it += 3;
-				continue;
-			}
-			if ((*it)->_if_explode)
-			{
+			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
@@ -865,20 +894,21 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		vector<Chess *>::iterator it = chess_list.begin();
 		while (it<chess_list.end())
 		{
-			glm::vec3 color1 CHESS_COLOR1;
-			shader.setVec3("objectColor", color1);
-			if (!(*it)->_if_explode)
-			{
+			if (!(*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
-			counter *= 2;
+			glm::vec3 color1 CHESS_COLOR1;
+			shader.setVec3("objectColor", color1);
+			
+			counter *= 1.4;
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
-			if (counter >= 3.14f) {
+			if (counter >= 10.0f) {
 				counter = 0.01;
 				(*it)->_if_explode = false;
+				(*it)->set_death();
 			}
 			shader.setFloat("time", counter);
 			(*it)->show(shader);
@@ -893,18 +923,18 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		++it;
 		while (it<chess_list.end())
 		{
-			if (!(*it)->_if_explode)
-			{
+			if (!(*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
-			counter *= 2;
+			counter *= 1.4;
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
-			if (counter >= 3.14f) {
+			if (counter >= 20.0f) {
 				counter = 0.01;
 				(*it)->_if_explode = false;
+				(*it)->set_death();
 			}
 			shader.setFloat("time", counter);
 			(*it)->show(shader);
@@ -919,18 +949,18 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		it += 2;
 		while (it<chess_list.end())
 		{
-			if (!(*it)->_if_explode)
-			{
+			if (!(*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
 			}
-			counter *= 2;
+			counter *= 1.4;
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model); 
-			if (counter >= 3.14f) {
+			if (counter >= 30.0f) {
 				counter = 0.01;
 				(*it)->_if_explode = false;
+				(*it)->set_death();
 			}
 			shader.setFloat("time", counter);
 			(*it)->show(shader);
@@ -948,7 +978,6 @@ void show_chess_board(Model &chess_board_model, Shader &shader)
 	//const auto view = camera.GetViewMatrix();
 
 	// view/projection transformations
-
 	//our_shader.setMat4("projection", projection);
 	//our_shader.setMat4("view", view);
 	shader.setVec3("objectColor", 0.0f, 0.0f, 0.0f);
