@@ -62,7 +62,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	//glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
+	//glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -85,7 +85,8 @@ int main()
 	//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-	Shader simpleDepthShader("shader/shadow_mapping_depth.vs", "shader/shadow_mapping_depth.fs");
+	//Shader simpleDepthShader("shader/shadow_mapping_depth.vs", "shader/shadow_mapping_depth.fs");
+	Shader simpleDepthShader("3.2.2.point_shadows_depth.vs", "3.2.2.point_shadows_depth.fs", "3.2.2.point_shadows_depth.gs");
 	Shader debugDepthQuad("shader/debug_quad.vs", "shader/debug_quad_depth.fs");
 
 	// build and compile shaders
@@ -272,54 +273,54 @@ int main()
 	};
 
 	vector <Chess *> chess_list = {
-		new ChessKing(1, -5, 0, 0, "models/Chess/King.obj"),
-		new ChessKing(7, 3, 1, 0, "models/Chess/King.obj"),
-		new ChessKing(-8, 2, 2, 0, "models/Chess/King.obj"),
-		new ChessQueen(2, -5, 0, 1, "models/Chess/Queen.obj"),
-		new ChessQueen(6, 3, 1, 1, "models/Chess/Queen.obj"),
-		new ChessQueen(-8, 1, 2, 1, "models/Chess/Queen.obj"),
-		new ChessRook(0, -4, 0, 2, "models/Chess/Rook.obj"),
-		new ChessRook(6, 2, 1, 2, "models/Chess/Rook.obj"),
-		new ChessRook(-6, 2, 2, 2, "models/Chess/Rook.obj"),
-		new ChessBishop(-1, -5, 0, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(8, 2, 1, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(-6, 4, 2, 3, "models/Chess/Bishop.obj"),
-		new ChessBishop(-3, -5, 0, 4, "models/Chess/Bishop.obj"),
-		new ChessBishop(9, 1, 1, 4, "models/Chess/Bishop.obj"),
-		new ChessBishop(-7, 3, 2, 4, "models/Chess/Bishop.obj"),
-		new ChessKnight(-2, -4, 0, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(7, 1, 1, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(-5, 3, 2, 5, "models/Chess/Knight.obj"),
-		new ChessKnight(2, -4, 0, 6, "models/Chess/Knight.obj"),
-		new ChessKnight(5, 3, 1, 6, "models/Chess/Knight.obj"),
-		new ChessKnight(-7, 1, 2, 6, "models/Chess/Knight.obj"),
-		new ChessViper(4, -4, 0, 7, "models/Chess/Viper.obj"),
-		new ChessViper(4, 4, 1, 7, "models/Chess/Viper.obj"),
-		new ChessViper(-8, 0, 2, 7, "models/Chess/Viper.obj"),
-		new ChessWizard(0, -5, 0, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(7, 2, 1, 8, "models/Chess/Wizard.obj"),
-		new ChessWizard(-7, 2, 2, 8, "models/Chess/Wizard.obj"),
-		new ChessGunman(-2, -5, 0, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(8, 1, 1, 9, "models/Chess/Gunman.obj"),
-		new ChessGunman(-6, 3, 2, 9, "models/Chess/Gunman.obj"),
-		new ChessPawn(-5, -4, 0, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(3, 4, 1, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(-8, -1, 2, 10, "models/Chess/Pawn.obj"),
-		new ChessPawn(-3, -4, 0, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(4, 3, 1, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(-7, 0, 2, 11, "models/Chess/Pawn.obj"),
-		new ChessPawn(-1, -4, 0, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(5, 2, 1, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(-6, 1, 2, 12, "models/Chess/Pawn.obj"),
-		new ChessPawn(1, -4, 0, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(6, 1, 1, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(-5, 2, 2, 13, "models/Chess/Pawn.obj"),
-		new ChessPawn(3, -4, 0, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(7, 0, 1, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(-4, 3, 2, 14, "models/Chess/Pawn.obj"),
-		new ChessPawn(5, -4, 0, 15, "models/Chess/Pawn.obj"),
-		new ChessPawn(8, -1, 1, 15, "models/Chess/Pawn.obj"),
-		new ChessPawn(-3, 4, 2, 15, "models/Chess/Pawn.obj")
+		new ChessKing(1, -5, 0, 0, "models/Chess/King1.obj"),
+		new ChessKing(7, 3, 1, 0, "models/Chess/King2.obj"),
+		new ChessKing(-8, 2, 2, 0, "models/Chess/King3.obj"),
+		new ChessQueen(2, -5, 0, 1, "models/Chess/Queen1.obj"),
+		new ChessQueen(6, 3, 1, 1, "models/Chess/Queen2.obj"),
+		new ChessQueen(-8, 1, 2, 1, "models/Chess/Queen3.obj"),
+		new ChessRook(0, -4, 0, 2, "models/Chess/Rook1.obj"),
+		new ChessRook(6, 2, 1, 2, "models/Chess/Rook2.obj"),
+		new ChessRook(-6, 2, 2, 2, "models/Chess/Rook3.obj"),
+		new ChessBishop(-1, -5, 0, 3, "models/Chess/Bishop1.obj"),
+		new ChessBishop(8, 2, 1, 3, "models/Chess/Bishop2.obj"),
+		new ChessBishop(-6, 4, 2, 3, "models/Chess/Bishop3.obj"),
+		new ChessBishop(-3, -5, 0, 4, "models/Chess/Bishop1.obj"),
+		new ChessBishop(9, 1, 1, 4, "models/Chess/Bishop2.obj"),
+		new ChessBishop(-7, 3, 2, 4, "models/Chess/Bishop3.obj"),
+		new ChessKnight(-2, -4, 0, 5, "models/Chess/Knight1.obj"),
+		new ChessKnight(7, 1, 1, 5, "models/Chess/Knight2.obj"),
+		new ChessKnight(-5, 3, 2, 5, "models/Chess/Knight3.obj"),
+		new ChessKnight(2, -4, 0, 6, "models/Chess/Knight1.obj"),
+		new ChessKnight(5, 3, 1, 6, "models/Chess/Knight2.obj"),
+		new ChessKnight(-7, 1, 2, 6, "models/Chess/Knight3.obj"),
+		new ChessViper(4, -4, 0, 7, "models/Chess/Viper1.obj"),
+		new ChessViper(4, 4, 1, 7, "models/Chess/Viper2.obj"),
+		new ChessViper(-8, 0, 2, 7, "models/Chess/Viper3.obj"),
+		new ChessWizard(0, -5, 0, 8, "models/Chess/Wizard1.obj"),
+		new ChessWizard(7, 2, 1, 8, "models/Chess/Wizard2.obj"),
+		new ChessWizard(-7, 2, 2, 8, "models/Chess/Wizard3.obj"),
+		new ChessGunman(-2, -5, 0, 9, "models/Chess/Gunman1.obj"),
+		new ChessGunman(8, 1, 1, 9, "models/Chess/Gunman2.obj"),
+		new ChessGunman(-6, 3, 2, 9, "models/Chess/Gunman3.obj"),
+		new ChessPawn(-5, -4, 0, 10, "models/Chess/Pawn1.obj"),
+		new ChessPawn(3, 4, 1, 10, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-8, -1, 2, 10, "models/Chess/Pawn3.obj"),
+		new ChessPawn(-3, -4, 0, 11, "models/Chess/Pawn1.obj"),
+		new ChessPawn(4, 3, 1, 11, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-7, 0, 2, 11, "models/Chess/Pawn3.obj"),
+		new ChessPawn(-1, -4, 0, 12, "models/Chess/Pawn1.obj"),
+		new ChessPawn(5, 2, 1, 12, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-6, 1, 2, 12, "models/Chess/Pawn3.obj"),
+		new ChessPawn(1, -4, 0, 13, "models/Chess/Pawn1.obj"),
+		new ChessPawn(6, 1, 1, 13, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-5, 2, 2, 13, "models/Chess/Pawn3.obj"),
+		new ChessPawn(3, -4, 0, 14, "models/Chess/Pawn1.obj"),
+		new ChessPawn(7, 0, 1, 14, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-4, 3, 2, 14, "models/Chess/Pawn3.obj"),
+		new ChessPawn(5, -4, 0, 15, "models/Chess/Pawn1.obj"),
+		new ChessPawn(8, -1, 1, 15, "models/Chess/Pawn2.obj"),
+		new ChessPawn(-3, 4, 2, 15, "models/Chess/Pawn3.obj")
 	};
 
 	//Model *chessboard = new Model("chessboard/Chessboard.obj");
@@ -353,27 +354,49 @@ int main()
 
 
 
+	//unsigned int depthMapFBO;
+	//glGenFramebuffers(1, &depthMapFBO);
+	//// create depth texture
+	//unsigned int depthMap;
+	//glGenTextures(1, &depthMap);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	//float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	//// attach depth texture as FBO's depth buffer
+	//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	//glDrawBuffer(GL_NONE);
+	//glReadBuffer(GL_NONE);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
-	// create depth texture
+	// create depth cubemap texture
 	unsigned int depthMap;
 	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	// attach depth texture as FBO's depth buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	Shader shader("shader/board-model.vs", "shader/board-model.fs");
+
+	//Shader shader("shader/board-model.vs", "shader/board-model.fs");
+	Shader shader("3.2.2.point_shadows.vs", "3.2.2.point_shadows.fs");
 	Shader explode_shader("shader/explode.vs", "shader/explode.fs", "shader/explode.gs");
 
 
@@ -395,9 +418,10 @@ int main()
 	//explode_shader.setInt("shadowMap", 1);
 	shader.use();
 	shader.setInt("diffuseTexture", 0);
-	shader.setInt("shadowMap", 1);
-	debugDepthQuad.use();
-	debugDepthQuad.setInt("depthMap", 0);
+	//shader.setInt("shadowMap", 1);
+	shader.setInt("depthMap", 1);
+	//debugDepthQuad.use();
+	//debugDepthQuad.setInt("depthMap", 0);
 
 
 	//camera.If_Move_Auto = true;
@@ -430,17 +454,17 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		//sunShader.use();
-		
+
 		//sunShader.setMat4("projection", projection);
 		//sunShader.setMat4("view", view);
-		
-		
+
+
 		//show_chess(chess_list);
 
 		//show_chess_board(chess_board_model);
 
 		//process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
-		
+
 
 		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		//glStencilMask(0xFF);
@@ -486,8 +510,8 @@ int main()
 
 
 
-							  // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-							  // -------------------------------------------------------------------------------
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -507,7 +531,70 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
-	static glm::mat4 lightProjection, lightView;
+	float near_plane = 1.0f;
+	float far_plane = 25.0f;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+	std::vector<glm::mat4> shadowTransforms;
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+	// 1. render scene to depth cubemap
+	// --------------------------------
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	DepthShader.use();
+	for (unsigned int i = 0; i < 6; ++i)
+		DepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+	DepthShader.setFloat("far_plane", far_plane);
+	DepthShader.setVec3("lightPos", lightPos);
+	show_chess(chess_list, DepthShader);
+	//show_chess_board(chess_board_model, DepthShader);
+	show_chess_board(block_list, DepthShader);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// 2. render scene as normal 
+	// -------------------------
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+	glStencilMask(0x00);
+	shader.use();
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+	shader.setMat4("projection", projection);
+	shader.setMat4("view", view);
+	// set lighting uniforms
+	shader.setVec3("lightPos", lightPos);
+	shader.setVec3("viewPos", camera.Position);
+	shader.setInt("shadows", 1); // enable/disable shadows by pressing 'SPACE'
+	shader.setFloat("far_plane", far_plane);
+	glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, woodTexture);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
+
+	//renderScene(shader);
+
+	glStencilMask(0x00);
+
+	show_chess_board(block_list, shader, true);
+	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	//glStencilMask(0xFF);
+
+	show_chess(chess_list, shader, true, false, true);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilMask(0xFF);
+
+
+
+	/*static glm::mat4 lightProjection, lightView;
 	static glm::mat4 lightSpaceMatrix;
 	const float near_plane = 1.0f;
 	const float far_plane = 10.5f;
@@ -522,25 +609,16 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
 	show_chess(chess_list, DepthShader);
-	//show_chess_board(chess_board_model, DepthShader);
 	show_chess_board(block_list, DepthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-	
-
-	const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
-	glm::mat4 view = camera.GetViewMatrix();
-
-	//select_shader.use();
-
 	glStencilMask(0x00);
 
 	shader.use();
-	
+
 	shader.setMat4("projection", projection);
 	shader.setMat4("view", view);
 	shader.setVec3("viewPos", camera.Position);
@@ -549,19 +627,15 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glActiveTexture(GL_TEXTURE0);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
-	//show_chess_board(chess_board_model, shader);
 
-	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	//glStencilMask(0xFF);  // used for select
 	glStencilMask(0x00);
 
 	show_chess_board(block_list, shader);
-	//glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	//glStencilMask(0xFF);
+
 
 	show_chess(chess_list, shader, true);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glStencilMask(0xFF);
+	glStencilMask(0xFF);*/
 
 	process_selected(shader, chess_list);
 
@@ -630,7 +704,7 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 		camera.move_duration = 500;
 		camera.If_Move_Auto = true;
 	}
-	if (glfwGetKey(window ,GLFW_KEY_1) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		chess_list[5]->get_moving_function(0, 0);
 	}
@@ -762,7 +836,7 @@ void process_selected(Shader &shader, std::vector<Chess *> &chess_list)
 	return;
 }
 
-void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode)
+void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode, bool if_motion_blur)
 {
 	static float counter = 0.1f;
 	//shader.setFloat("time", glfwGetTime());
@@ -773,12 +847,13 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 		shader.setVec3("objectColor", color1);
 		while (it<chess_list.end())
 		{
-			if((*it)->check_death())
+			if ((*it)->check_death())
 			{
 				it += 3;
 				continue;
 			}
 			// team1, yellow
+
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
@@ -789,7 +864,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 
 		// team2, blue
 		glm::vec3 color2 CHESS_COLOR2;
-		shader.setVec3("objectColor", color2); 
+		shader.setVec3("objectColor", color2);
 		it = chess_list.begin();
 		++it;
 		while (it<chess_list.end())
@@ -837,8 +912,18 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 				it += 3;
 				continue;
 			}
+			if (if_motion_blur)
+			{
+				shader.setInt("num_samples", 10);
+				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
+			}
+			else
+			{
+				shader.setInt("num_samples", 1);
+				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
+			}
 			glm::vec3 color1 CHESS_COLOR1;
-			shader.setVec3("objectColor", color1); 
+			shader.setVec3("objectColor", color1);
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
@@ -858,6 +943,16 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
 				it += 3;
 				continue;
+			}
+			if (if_motion_blur)
+			{
+				shader.setInt("num_samples", 10);
+				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
+			}
+			else
+			{
+				shader.setInt("num_samples", 1);
+				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
 			}
 			glm::mat4 model;
 			(*it)->get_model(model);
@@ -879,10 +974,20 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 				it += 3;
 				continue;
 			}
+			if (if_motion_blur)
+			{
+				shader.setInt("num_samples", 10);
+				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
+			}
+			else
+			{
+				shader.setInt("num_samples", 1);
+				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
+			}
 			glm::mat4 model;
 			(*it)->get_model(model);
 			shader.setMat4("model", model);
-			
+
 			(*it)->show(shader);
 			//++it;
 			it += 3;
@@ -900,7 +1005,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 			}
 			glm::vec3 color1 CHESS_COLOR1;
 			shader.setVec3("objectColor", color1);
-			
+
 			counter *= 1.4;
 			glm::mat4 model;
 			(*it)->get_model(model);
@@ -956,7 +1061,7 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 			counter *= 1.4;
 			glm::mat4 model;
 			(*it)->get_model(model);
-			shader.setMat4("model", model); 
+			shader.setMat4("model", model);
 			if (counter >= 30.0f) {
 				counter = 0.01;
 				(*it)->_if_explode = false;
@@ -970,33 +1075,24 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 	}
 }
 
-void show_chess_board(Model &chess_board_model, Shader &shader)
-{
-	//Shader our_shader("shader/board-model.vs", "shader/board-model.fs");
-	//our_shader.use();
-	//const auto projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
-	//const auto view = camera.GetViewMatrix();
 
-	// view/projection transformations
-	//our_shader.setMat4("projection", projection);
-	//our_shader.setMat4("view", view);
-	shader.setVec3("objectColor", 0.0f, 0.0f, 0.0f);
-	glm::mat4 board_model;
-	board_model = glm::rotate(board_model, 3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	//sunmodel = glm::rotate(sunmodel, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-	board_model = glm::scale(board_model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
-	shader.setMat4("model", board_model);
-	chess_board_model.Draw(shader);
-	
-}
-
-void show_chess_board(std::vector<ChessBoard *> &block_list, Shader &shader)
+void show_chess_board(std::vector<ChessBoard *> &block_list, Shader &shader, bool if_motion_blur)
 {
 	//shader.setVec3("objectColor", 0.0f, 0.0f, 0.0f);
 	shader.setFloat("time", glfwGetTime());
 	vector<ChessBoard *>::iterator it = block_list.begin();
 	while (it<block_list.end())
 	{
+		if (if_motion_blur)
+		{
+			shader.setInt("num_samples", 10);
+			shader.setVec2("velocity", glm::vec2(0.01f, 0.01f));
+		}
+		else
+		{
+			shader.setInt("num_samples", 0);
+			shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
+		}
 		shader.setVec3("objectColor", (*it)->block_color);
 		glm::mat4 model;
 		(*it)->get_model(model);
