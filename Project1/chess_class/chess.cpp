@@ -32,6 +32,8 @@ void Chess::get_model(glm::mat4 & model)
 
 void Chess::get_moving_function(int next_pos_x, int next_pos_y)
 {
+	cor_x_ = next_pos_x;
+	cor_y_ = next_pos_y;
 	this->next_position = glm::vec3(vertice_coordinate[next_pos_x+9][next_pos_y+5][0], vertice_coordinate[next_pos_x+9][next_pos_y+5][1], vertice_coordinate[next_pos_x+9][next_pos_y+5][2]);
 	this->distance = 20;
 	this->if_moving = true;
@@ -42,12 +44,18 @@ void Chess::set_death()
 	if_die_ = true;
 }
 
-const bool Chess::check_death()
+
+const int Chess::get_cor_x()
 {
-	return if_die_;
+	return cor_x_;
 }
 
-bool Chess::check_live_status() const
+const int Chess::get_cor_y()
+{
+	return cor_y_;
+}
+
+bool Chess::check_death() const
 {
 	return if_die_;
 }
@@ -61,7 +69,7 @@ Chess::Chess(const int init_cor_x, const int init_cor_y, int id, int init_team, 
 	if_selected_ = false;
 	//pos_ = glm::vec3(0.0, 0.0, 0.0);
 	pos_ = glm::vec3(vertice_coordinate[init_cor_x + 9][init_cor_y + 5][0], vertice_coordinate[init_cor_x + 9][init_cor_y + 5][1], vertice_coordinate[init_cor_x + 9][init_cor_y + 5][2]);
-	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0);
+	rotation_ = glm::vec3(-3.14f/2, 0.0f, 0.0f);
 	//scale_ = glm::vec3(0.1, 0.1, 0.1);
 	//scale_ = glm::vec3(0.005, 0.005, 0.005);
 	scale_ = glm::vec3(0.1f, 0.1f, 0.1f);

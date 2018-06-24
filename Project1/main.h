@@ -30,7 +30,9 @@ using namespace std;
 
 unsigned int loadCubemap(vector<std::string> faces);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos, std::vector<Chess *>chess_list);
+//void mouse_callback(GLFWwindow* window, double xpos, double ypos, std::vector<Chess *>chess_list);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window, std::vector<Chess *> chess_list);
 void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time = false, bool if_explode = false, bool if_motion_blur = false);

@@ -14,7 +14,7 @@ ChessQueen::~ChessQueen()
 
 void ChessQueen::show(Shader &input_shader)
 {
-	if (check_live_status())
+	if (check_death())
 	{
 		return;
 	}

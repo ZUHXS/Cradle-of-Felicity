@@ -19,8 +19,8 @@
 //unsigned int loadCubemap(vector<std::string> faces);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+#define SCR_WIDTH 800
+#define SCR_HEIGHT 600
 
 // camera
 Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
@@ -31,8 +31,11 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+bool if_mouse_callback = true;
 
 glm::vec3 lightPos(-4.0f, 4.0f, -1.0f);
+vector <ChessBoard *> Block_list;
+vector <Chess *> chess_list;
 
 int main()
 {
@@ -61,7 +64,7 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	//glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
 	//glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
@@ -144,7 +147,7 @@ int main()
 
 	//Model chess_board_model("models/chessboard/123.obj");
 
-	vector <ChessBoard *> Block_list = {
+	vector <ChessBoard *> Block_list1 = {
 		new ChessBoard("models/Board_Blocks/1.obj", BLACK),
 		new ChessBoard("models/Board_Blocks/2.obj", WHITE),
 		new ChessBoard("models/Board_Blocks/3.obj", BLACK),
@@ -272,7 +275,9 @@ int main()
 		new ChessBoard("models/Board_Blocks/125.obj", BLACK)
 	};
 
-	vector <Chess *> chess_list = {
+	Block_list = Block_list1;
+
+	vector <Chess *> chess_list1 = {
 		new ChessKing(1, -5, 0, 0, "models/Chess/King1.obj"),
 		new ChessKing(7, 3, 1, 0, "models/Chess/King2.obj"),
 		new ChessKing(-8, 2, 2, 0, "models/Chess/King3.obj"),
@@ -322,6 +327,8 @@ int main()
 		new ChessPawn(8, -1, 1, 15, "models/Chess/Pawn2.obj"),
 		new ChessPawn(-3, 4, 2, 15, "models/Chess/Pawn3.obj")
 	};
+
+	chess_list = chess_list1;
 
 	//Model *chessboard = new Model("chessboard/Chessboard.obj");
 
@@ -527,7 +534,7 @@ int main()
 void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shader &select_shader, Shader &explode_shader, std::vector<Chess *> &chess_list, std::vector<ChessBoard *> &block_list, unsigned int &depthMapFBO, unsigned int &depthMap)
 {
 
-	chess_list[23]->if_selected_ = true;
+	//chess_list[23]->if_selected_ = true;
 
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
@@ -593,50 +600,6 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glStencilMask(0xFF);
 
 
-
-	/*static glm::mat4 lightProjection, lightView;
-	static glm::mat4 lightSpaceMatrix;
-	const float near_plane = 1.0f;
-	const float far_plane = 10.5f;
-	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-	lightSpaceMatrix = lightProjection * lightView;
-	DepthShader.use();
-	DepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glActiveTexture(GL_TEXTURE0);
-	show_chess(chess_list, DepthShader);
-	show_chess_board(block_list, DepthShader);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glStencilMask(0x00);
-
-	shader.use();
-
-	shader.setMat4("projection", projection);
-	shader.setMat4("view", view);
-	shader.setVec3("viewPos", camera.Position);
-	shader.setVec3("lightPos", lightPos);
-	shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-	glActiveTexture(GL_TEXTURE0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-
-	glStencilMask(0x00);
-
-	show_chess_board(block_list, shader);
-
-
-	show_chess(chess_list, shader, true);
-	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glStencilMask(0xFF);*/
-
 	process_selected(shader, chess_list);
 
 	explode_shader.use();
@@ -649,6 +612,8 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	show_chess(chess_list, explode_shader, true, true);
 
+
+	// begin to draw select effect
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 	glDisable(GL_DEPTH_TEST);
@@ -656,11 +621,17 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	select_shader.use();
 	select_shader.setMat4("projection", projection);
 	select_shader.setMat4("view", view);
-	glm::mat4 model = glm::mat4();
-	chess_list[23]->get_model(model);
-	select_shader.setMat4("model", model);
 	select_shader.setFloat("time", 0.2);
-	chess_list[23]->chess_model_.Draw(select_shader);
+	for (int i = 0; i < chess_list.size(); i++)
+	{
+		if (chess_list[i]->_if_explode || chess_list[i]->check_death())
+			continue;
+		glm::mat4 model = glm::mat4();
+		chess_list[i]->get_model(model);
+		select_shader.setMat4("model", model);
+		if (chess_list[i]->if_selected_)
+			chess_list[i]->chess_model_.Draw(select_shader);
+	}
 
 
 	glBindVertexArray(0);
@@ -751,7 +722,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos, std::vector<Chess *>chess_list)
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	//if (firstMouse)
 	//{
@@ -766,7 +737,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos, std::vector<Ch
 	//lastX = xpos;
 	//lastY = ypos;
 
-	camera.ProcessMouseMovement(xpos, ypos, chess_list);
+	camera.ProcessMouseMovement(xpos, ypos, chess_list, Block_list);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called

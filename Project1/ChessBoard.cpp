@@ -6,6 +6,7 @@ ChessBoard::ChessBoard(string const &path, glm::vec3 color, const bool gamma) : 
 {
 	scale_ = glm::vec3(0.1f, 0.1f, 0.1f);
 	block_color = color;
+	origin_color = color;
 }
 
 
@@ -22,4 +23,9 @@ void ChessBoard::get_model(glm::mat4& model)
 {
 	model = glm::scale(model, scale_);
 	model = glm::rotate(model, -3.14f / 2, glm::vec3(1.0f, 0.0f, 0.0f));
+}
+
+void ChessBoard::reset_color()
+{
+	block_color = origin_color;
 }
