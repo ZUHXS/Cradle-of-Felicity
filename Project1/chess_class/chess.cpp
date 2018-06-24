@@ -39,9 +39,9 @@ void Chess::get_moving_function(int next_pos_x, int next_pos_y)
 	this->if_moving = true;
 }
 
-void Chess::set_death()
+void Chess::set_death(bool status)
 {
-	if_die_ = true;
+	if_die_ = status;
 }
 
 

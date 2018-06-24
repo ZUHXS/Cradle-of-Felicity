@@ -31,7 +31,8 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-bool if_mouse_callback = true;
+extern bool if_mouse_key_callback = true;
+bool mouse_button_status = false;  // if clicked
 
 glm::vec3 lightPos(-4.0f, 4.0f, -1.0f);
 vector <ChessBoard *> Block_list;
@@ -65,6 +66,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	//glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
@@ -342,7 +344,7 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
 
 
-	vector<std::string> faces
+	/*vector<std::string> faces
 	{
 		"models/Board_Blocks/white.png",
 		"models/Board_Blocks/white.png",
@@ -350,36 +352,24 @@ int main()
 		"models/Board_Blocks/white.png",
 		"models/Board_Blocks/white.png",
 		"models/Board_Blocks/white.png"
+	};*/
+	vector<std::string> faces
+	{
+	"models/skybox/right.jpg",
+	"models/skybox/left.jpg",
+	"models/skybox/top.jpg",
+	"models/skybox/bottom.jpg",
+	"models/skybox/front.jpg",
+	"models/skybox/back.jpg"
 	};
 
-	unsigned int cubemapTexture = loadCubemap(faces);
+	unsigned int cubemap_texture = loadCubemap(faces);
 
 
 
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
-
-
-	//unsigned int depthMapFBO;
-	//glGenFramebuffers(1, &depthMapFBO);
-	//// create depth texture
-	//unsigned int depthMap;
-	//glGenTextures(1, &depthMap);
-	//glBindTexture(GL_TEXTURE_2D, depthMap);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	//float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	//// attach depth texture as FBO's depth buffer
-	//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-	//glDrawBuffer(GL_NONE);
-	//glReadBuffer(GL_NONE);
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -412,7 +402,7 @@ int main()
 	Shader select_shader("shader/geometry_select.vs", "shader/geometry_select.fs", "shader/geometry_select.gs");
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 view = camera.GetViewMatrix(chess_list);
 
 	shaderSingleColor.use();
 
@@ -427,19 +417,6 @@ int main()
 	shader.setInt("diffuseTexture", 0);
 	//shader.setInt("shadowMap", 1);
 	shader.setInt("depthMap", 1);
-	//debugDepthQuad.use();
-	//debugDepthQuad.setInt("depthMap", 0);
-
-
-	//camera.If_Move_Auto = true;
-
-	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-
-
-	//Model EarModel("sol/sol.c4d");
-
-	// draw in wireframe
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// render loop
 	// -----------
@@ -460,46 +437,7 @@ int main()
 		glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		//sunShader.use();
-
-		//sunShader.setMat4("projection", projection);
-		//sunShader.setMat4("view", view);
-
-
-		//show_chess(chess_list);
-
-		//show_chess_board(chess_board_model);
-
-		//process_scene(shader, simpleDepthShader, debugDepthQuad, chess_list, chess_board_model, depthMapFBO, depthMap);
-
-
-		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		//glStencilMask(0xFF);
 		process_scene(shader, simpleDepthShader, debugDepthQuad, select_shader, explode_shader, chess_list, Block_list, depthMapFBO, depthMap);
-
-		/*shaderSingleColor.use();
-		float scale = 1.1;
-		const glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		shaderSingleColor.setMat4("view", view);
-		shaderSingleColor.setMat4("projection", projection);
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-		shaderSingleColor.use();
-
-		shaderSingleColor.use();
-		glm::mat4 model1;
-		chess_list[0]->get_model(model1);
-		model1 = glm::scale(model1, glm::vec3(scale, scale, scale));
-		shaderSingleColor.setMat4("model", model1);
-		chess_list[0]->chess_model_.Draw(shaderSingleColor);
-		glBindVertexArray(0);
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);*/
-
-
 
 
 		//glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -507,16 +445,12 @@ int main()
 		//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
 		//skyboxShader.setMat4("view", view);
 		//skyboxShader.setMat4("projection", projection);
-		//// skybox cube
 		//glBindVertexArray(skyboxVAO);
 		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_texture);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		//glBindVertexArray(0);
 		//glDepthFunc(GL_LESS); // set depth function back to default
-
-
-
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
@@ -537,10 +471,9 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	//chess_list[23]->if_selected_ = true;
 
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-
-	float near_plane = 1.0f;
-	float far_plane = 25.0f;
-	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+	const float near_plane = 1.0f;
+	const float far_plane = 25.0f;
+	const glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), static_cast<float>(SHADOW_WIDTH) / static_cast<float>(SHADOW_HEIGHT), near_plane, far_plane);
 	std::vector<glm::mat4> shadowTransforms;
 	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -573,8 +506,8 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	glStencilMask(0x00);
 	shader.use();
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 view = camera.GetViewMatrix();
+	const auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	const auto view = camera.GetViewMatrix(chess_list);
 	shader.setMat4("projection", projection);
 	shader.setMat4("view", view);
 	// set lighting uniforms
@@ -586,8 +519,6 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	//glBindTexture(GL_TEXTURE_2D, woodTexture);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap);
-
-	//renderScene(shader);
 
 	glStencilMask(0x00);
 
@@ -606,9 +537,6 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 
 	explode_shader.setMat4("projection", projection);
 	explode_shader.setMat4("view", view);
-	//explode_shader.setVec3("viewPos", camera.Position);
-	//explode_shader.setVec3("lightPos", lightPos);
-	//explode_shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	show_chess(chess_list, explode_shader, true, true);
 
@@ -644,6 +572,9 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 
+
+
+
 }
 
 
@@ -654,8 +585,12 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 {
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (!if_mouse_key_callback)
+		return;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -665,8 +600,22 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		//if_mouse_key_callback = false;
+		camera.move_origin_position = glm::vec3(vertice_coordinate[-7 + 9][1 + 5][0], 0.5, vertice_coordinate[-7 + 9][1 + 5][2]);
+		//camera.move_destination = glm::vec3(vertice_coordinate[8 + 9][-1 + 5][0], 0.5, vertice_coordinate[8 + 9][-1 + 5][2]);
+		camera.move_destination = glm::vec3(vertice_coordinate[2 + 9][-5 + 5][0], 0.5, vertice_coordinate[2 + 9][-5 + 5][2]);
+
+		camera.move_duration = static_cast<int>(sqrt(((pow(camera.move_origin_position.x - camera.move_destination.x, 2) + pow(camera.move_origin_position.z - camera.move_destination.z, 2)))) / init_gun_hor_speed);
+		camera.init_gun_vert_speed = 0.5 * G * camera.move_duration;
+		printf("vert is %f", camera.init_gun_vert_speed);
+		//printf("%f, %f, %f, %f, %f\n", camera.move_origin_position.x, camera.mo)
+		printf("move duration is: %d\n", camera.move_duration);
+		camera.if_parabola = true;
 		camera.If_Move_Auto = true;
+		if_mouse_key_callback = false;
+		//camera.If_Move_Auto = true;
+	}
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
 	{
 		camera.move_destination = glm::vec3(0.0f, 10.0f, 0.0f);
@@ -674,6 +623,8 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 		camera.destination_sight = glm::vec3(0.0f, 0.0f, 0.0f);
 		camera.move_duration = 500;
 		camera.If_Move_Auto = true;
+		//camera.if_parabola = true;
+		if_mouse_key_callback = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
@@ -695,17 +646,22 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 	{
 		chess_list[21]->get_moving_function(4, -1);
 	}
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+	{
+		chess_list[5]->set_death(false);
+		chess_list[5]->_if_explode = false;
+	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
 		chess_list[5]->_if_explode = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 	{
-		chess_list[10]->_if_explode = true;
+		chess_list[23]->_if_explode = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
 	{
-		chess_list[15]->_if_explode = true;
+		chess_list[14]->_if_explode = true;
 	}
 }
 
@@ -723,22 +679,24 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	//if (firstMouse)
-	//{
-	//	lastX = xpos;
-	//	lastY = ypos;
-	//	firstMouse = false;
-	//}
-
-	//float xoffset = xpos - lastX;
-	//float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	//lastX = xpos;
-	//lastY = ypos;
-
-	camera.ProcessMouseMovement(xpos, ypos, chess_list, Block_list);
+{;
+	if (!if_mouse_key_callback)
+		return;
+	bool if_process;
+	int first_i;
+	int first_j;
+	int second_i;
+	int second_j;
+	camera.ProcessMouseMovement(xpos, ypos, chess_list, Block_list, mouse_button_status);
+	printf("status: %d\n", glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT));
 }
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		mouse_button_status = true;
+}
+
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
