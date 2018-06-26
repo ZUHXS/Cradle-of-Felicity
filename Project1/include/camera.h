@@ -23,7 +23,7 @@ const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
 
 const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 1200;
+const unsigned int SCR_HEIGHT = 900;
 const double G = 0.00223;
 const double init_gun_hor_speed = 0.05;
 

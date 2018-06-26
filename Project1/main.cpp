@@ -20,7 +20,7 @@
 
 // settings
 #define SCR_WIDTH 1600
-#define SCR_HEIGHT 1200
+#define SCR_HEIGHT 900
 
 // camera
 Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
@@ -602,13 +602,22 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 	}
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
 	{
-		camera.move_destination = glm::vec3(0.0f, 10.0f, 0.0f);
+		/*camera.move_destination = glm::vec3(2.25f, 0.3f, -1.732f);
 		camera.move_origin_position = camera.Position;
 		camera.destination_sight = glm::vec3(0.0f, 0.0f, 0.0f);
 		camera.move_duration = 500;
+		camera.If_Move_Auto = true;*/
+		//camera.move_origin_position = glm::vec3(vertice_coordinate[4][-2][0], 1.6f, vertice_coordinate[4][-2][2]);
+		//camera.move_destination = glm::vec3(vertice_coordinate[-3][2][0], 1.5f, vertice_coordinate[-3][2][2]);
+		//camera.move_origin_position = glm::vec3(vertice_coordinate[-4+9][-2+5][0], 1.0f, vertice_coordinate[-4+9][-2+5][2]);
+		camera.move_destination = glm::vec3(vertice_coordinate[-4 + 9][-2 + 5][0], 0.6f, vertice_coordinate[-4 + 9][-2 + 5][2]);
+		camera.move_origin_position = glm::vec3(vertice_coordinate[4 + 9][2 + 5][0], 1.5f, vertice_coordinate[4 + 9][2 + 5][2]);
+		camera.if_parabola = false;
+		camera.destination_sight = camera.move_destination;
+		camera.move_duration = 1000;
 		camera.If_Move_Auto = true;
 		//camera.if_parabola = true;
-		if_mouse_key_callback = false;
+		//if_mouse_key_callback = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
@@ -616,30 +625,33 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
 	{
-		chess_list[23]->get_moving_function(2, 2, camera);
+		chess_list[22]->_if_explode = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
 	{
-		chess_list[14]->get_moving_function(-4, 0, camera);
+		chess_list[23]->_if_explode = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
 	{
 		//chess_list[16]->get_moving_function(1, -1, camera);
-		chess_list[27]->get_moving_function(0, 0, camera);
+		chess_list[21]->_if_explode = true;
 		//chess_list[28]->get_moving_function(0, 0, camera);
 	
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
 	{
-		chess_list[27]->get_moving_function(-2, 0, camera);
+		chess_list[22]->_if_explode = false;
+		chess_list[22]->set_death(false);
 	}
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
 	{
-		chess_list[27]->get_moving_function(-5, 0, camera);
+		chess_list[23]->_if_explode = false;
+		chess_list[23]->set_death(false);
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
-		chess_list[27]->get_moving_function(-7, 0, camera);
+		chess_list[21]->_if_explode = false;
+		chess_list[21]->set_death(false);
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 	{

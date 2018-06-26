@@ -52,10 +52,10 @@ glm::mat4 Camera::GetViewMatrix(std::vector<Chess*>chess_list)
 			x = 0;
 			if_mouse_key_callback = true;
 		}
-		
-		glm::vec3 gun_position(move_origin_position + ((move_destination - move_origin_position) / static_cast<float>(move_duration)) * static_cast<float>(x));
+
+		const glm::vec3 gun_position(move_origin_position + ((move_destination - move_origin_position) / static_cast<float>(move_duration)) * static_cast<float>(x));
 		//glm::vec3 gun_front(move_destination - move_origin_position);
-		return glm::lookAt(gun_position, destination_sight, Up);
+		return glm::lookAt(gun_position, move_destination, Up);
 	}
 	else
 	{
@@ -164,7 +164,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 
 
 		const double normal_x = (static_cast<float>(xoffset) - 800.0f) / 800.0f;
-		const double normal_y = (600.0f - static_cast<float>(yoffset)) / 600.0f;
+		const double normal_y = (450.0f - static_cast<float>(yoffset)) / 450.0f;
 		int min_i = 0;
 		int min_j = 0;
 		double min = 0.009;
@@ -263,7 +263,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 		const glm::vec3 a_pos(0.0f, 0.0f, 0.0f);
 
 		const double normal_x = (static_cast<float>(xoffset) - 800.0f) / 800.0f;
-		const double normal_y = (600.0f - static_cast<float>(yoffset)) / 600.0f;
+		const double normal_y = (450.0f - static_cast<float>(yoffset)) / 450.0f;
 		int min_i = 0;
 		int min_j = 0;
 		double min = 0.009;
