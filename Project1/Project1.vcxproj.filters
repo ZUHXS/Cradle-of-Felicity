@@ -111,4 +111,75 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\3.2.2.point_shadows.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\3.2.2.point_shadows.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\3.2.2.point_shadows_depth.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\3.2.2.point_shadows_depth.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\3.2.2.point_shadows_depth.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\board-model.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\board-model.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\debug_quad.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\debug_quad_depth.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\explode.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\explode.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\explode.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\geometry_select.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\geometry_select.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\geometry_select.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\model.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\model.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\shadow_mapping_depth.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\shadow_mapping_depth.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\starbox.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\starbox.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\sunmodel.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shader\sunmodel.vs">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

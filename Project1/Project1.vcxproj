@@ -160,6 +160,31 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="model.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\3.2.2.point_shadows.fs" />
+    <None Include="shader\3.2.2.point_shadows.vs" />
+    <None Include="shader\3.2.2.point_shadows_depth.fs" />
+    <None Include="shader\3.2.2.point_shadows_depth.gs" />
+    <None Include="shader\3.2.2.point_shadows_depth.vs" />
+    <None Include="shader\board-model.fs" />
+    <None Include="shader\board-model.vs" />
+    <None Include="shader\debug_quad.vs" />
+    <None Include="shader\debug_quad_depth.fs" />
+    <None Include="shader\explode.fs" />
+    <None Include="shader\explode.gs" />
+    <None Include="shader\explode.vs" />
+    <None Include="shader\geometry_select.fs" />
+    <None Include="shader\geometry_select.gs" />
+    <None Include="shader\geometry_select.vs" />
+    <None Include="shader\model.fs" />
+    <None Include="shader\model.vs" />
+    <None Include="shader\shadow_mapping_depth.fs" />
+    <None Include="shader\shadow_mapping_depth.vs" />
+    <None Include="shader\starbox.fs" />
+    <None Include="shader\starbox.vs" />
+    <None Include="shader\sunmodel.fs" />
+    <None Include="shader\sunmodel.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

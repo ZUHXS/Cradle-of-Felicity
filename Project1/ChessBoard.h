@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include "model.h"
 
-#define HIGHLIGHTCOLOR glm::vec3(0.2f, 0.2f, 0.8f)
+#define HIGHLIGHTCOLOR glm::vec3(159.0f/255.0f, 1.0f, 159.0f/255.0f)
+#define HIGHLIGHTCOLOR2 glm::vec3(1.0f, 1.0f, 128.0f/255.0f)
 
 class ChessBoard
 {

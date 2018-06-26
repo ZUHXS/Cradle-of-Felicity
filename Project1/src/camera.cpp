@@ -2,7 +2,9 @@
 #include <GLFW/glfw3.h>
 
 extern bool if_mouse_key_callback;
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front(glm::vec3(-position.x, -position.y, -position.z)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
+	Front(glm::vec3(-position.x, -position.y, -position.z)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY),
+	Zoom(ZOOM)
 {
 	Position = position;
 	WorldUp = up;
@@ -18,7 +20,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front
 	updateCameraVectors();
 }
 
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) :
+	Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
 	Position = glm::vec3(posX, posY, posZ);
 	WorldUp = glm::vec3(upX, upY, upZ);
@@ -67,6 +70,8 @@ glm::mat4 Camera::GetViewMatrix(std::vector<Chess*>chess_list)
 		{
 			for (int i = 0; i < chess_list.size(); i++)
 			{
+				if (chess_list[i]->check_death())   // if die, then continue
+					continue;
 				if (vertice_coordinate[chess_list[i]->get_cor_x()+9][chess_list[i]->get_cor_y() + 5][0] == move_destination.x && vertice_coordinate[chess_list[i]->get_cor_x() + 9][chess_list[i]->get_cor_y() + 5][2] == move_destination.z)
 				{
 					chess_list[i]->_if_explode = true;
@@ -143,11 +148,12 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 	static auto last_block_index = 0;
 	static auto first_step_i = 0;
 	static auto first_step_j = 0;
+	static auto first_block_index = 0;
+	static auto first_chess_index = -1;
 	static auto second_last_i = 0;
 	static auto second_last_j = 0;
 	static auto second_last_chess_index = -1;
 	static auto second_last_block_index = 0;
-
 
 
 	//glm::vec3 a(-4.76, -1.0, 0.136);
@@ -203,8 +209,10 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			// first change the chess's select status
 			for (i = 0; i < static_cast<int>(chess_list.size()); i++)
 			{
-				if (chess_list[i]->get_cor_x() == min_i && chess_list[i]->get_cor_y() == min_j) {
+				if (chess_list[i]->get_cor_x() == min_i && chess_list[i]->get_cor_y() == min_j && !chess_list[i]->check_death()) {
 					chess_list[i]->if_selected_ = true;
+					chess_list[i]->select_effect = 1;
+					first_chess_index = i;
 					break;
 				}
 			}
@@ -215,11 +223,13 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			{
 				block_index -= 1;
 				Block_list[block_index]->block_color = HIGHLIGHTCOLOR;
+				first_block_index = block_index;
 			}
 			else if (block_index != 0)
 			{
 				block_index -= 2;
 				Block_list[block_index]->block_color = HIGHLIGHTCOLOR;
+				first_block_index = block_index;
 			}
 
 
@@ -227,17 +237,17 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			if ((min_i != last_i || min_j != last_j) && i != static_cast<int>(chess_list.size()))  // something on the board
 			{
 				chess_list[last_chess_index == -1 ? 0 : last_chess_index]->if_selected_ = false;
+				chess_list[last_chess_index == -1 ? 0 : last_chess_index]->select_effect = 0;
 				last_chess_index = i;
-				last_i = min_i;
-				last_j = min_j;
 			}
 			if ((min_i != last_i || min_j != last_j) && i == static_cast<int>(chess_list.size()))   // nothing on the board
 			{
 				chess_list[last_chess_index == -1 ? 0 : last_chess_index]->if_selected_ = false;
+				chess_list[last_chess_index == -1 ? 0 : last_chess_index]->select_effect = 0;
 				last_chess_index = -1;
-				last_i = min_i;
-				last_j = min_j;
 			}
+			last_i = min_i;
+			last_j = min_j;
 
 			if (block_index != last_block_index)
 			{
@@ -251,7 +261,6 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 	else
 	{
 		const glm::vec3 a_pos(0.0f, 0.0f, 0.0f);
-
 
 		const double normal_x = (static_cast<float>(xoffset) - 400.0f) / 400.0f;
 		const double normal_y = (300.0f - static_cast<float>(yoffset)) / 300.0f;
@@ -291,13 +300,21 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 		}
 
 		if (min != 0.009) {
+			if (second_last_i == first_step_i && second_last_j == first_step_j)
+			{
+				second_last_chess_index = 0;
+				second_last_block_index = 0;
+				second_last_i = 0;
+				second_last_j = 0;
+			}
 			int i;
 
 			// first change the chess's select status
 			for (i = 0; i < static_cast<int>(chess_list.size()); i++)
 			{
-				if (chess_list[i]->get_cor_x() == min_i && chess_list[i]->get_cor_y() == min_j) {
+				if (chess_list[i]->get_cor_x() == min_i && chess_list[i]->get_cor_y() == min_j && !chess_list[i]->check_death() && i != first_chess_index) {
 					chess_list[i]->if_selected_ = true;
+					chess_list[i]->select_effect = 2;
 					break;
 				}
 			}
@@ -306,20 +323,26 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			auto block_index = block_coor[min_i + 9][min_j + 5];
 			if (block_index <= 60 && block_index != 0)
 			{
-				block_index -= 1;
-				Block_list[block_index]->block_color = HIGHLIGHTCOLOR;
+				if (block_index - 1 != first_block_index) {
+					block_index -= 1;
+					Block_list[block_index]->block_color = HIGHLIGHTCOLOR2;
+				}
 			}
 			else if (block_index != 0)
 			{
-				block_index -= 2;
-				Block_list[block_index]->block_color = HIGHLIGHTCOLOR;
+				if (block_index - 2 != first_block_index) {
+					block_index -= 2;
+					Block_list[block_index]->block_color = HIGHLIGHTCOLOR2;
+				}
 			}
 
 
 			// reset last chess's select status and block's status
+				
 			if ((min_i != second_last_i || min_j != second_last_j) && i != static_cast<int>(chess_list.size()))
 			{
 				chess_list[second_last_chess_index == -1 ? 0 : second_last_chess_index]->if_selected_ = false;
+				chess_list[second_last_chess_index == -1 ? 0 : second_last_chess_index]->select_effect = 0;
 				second_last_chess_index = i;
 				second_last_i = min_i;
 				second_last_j = min_j;
@@ -327,6 +350,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			if ((min_i != second_last_i || min_j != second_last_j) && i == static_cast<int>(chess_list.size()))
 			{
 				chess_list[second_last_chess_index == -1 ? 0 : second_last_chess_index]->if_selected_ = false;
+				chess_list[second_last_chess_index == -1 ? 0 : second_last_chess_index]->select_effect = 0;
 				second_last_chess_index = -1;
 				second_last_i = min_i;
 				second_last_j = min_j;
@@ -337,8 +361,12 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 				Block_list[second_last_block_index]->reset_color();
 				second_last_block_index = block_index;
 			}
+				
+			
 		}
 	}
+
+
 	if(mouse_button)  // if pressed
 	{
 		printf("Press detected, cur step: %d\n", step);
@@ -348,6 +376,13 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 				goto finish;   // no chess selected
 			}
 			step += 1;
+			chess_list[first_chess_index]->if_selected_ = true;
+			chess_list[first_chess_index]->select_effect = 1;
+			Block_list[first_block_index]->block_color = HIGHLIGHTCOLOR;
+			//second_last_chess_index = first_chess_index;
+			//second_last_block_index = first_block_index;
+			//second_last_i = last_i;
+			//second_last_j = last_j;
 			first_step_i = last_i;
 			first_step_j = last_j;
 		}
@@ -357,17 +392,24 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			step = 0;
 			if (second_last_chess_index != -1)
 				chess_list[second_last_chess_index]->_if_explode = true;
-			chess_list[last_chess_index]->get_moving_function(second_last_i, second_last_j);
+			chess_list[last_chess_index]->get_moving_function(second_last_i, second_last_j, *this);
+			chess_list[first_chess_index]->select_effect = 0;
+			chess_list[first_chess_index]->if_selected_ = false;
+			Block_list[first_block_index]->reset_color();
+			Block_list[second_last_block_index]->reset_color();
 			last_i = 0;
 			last_j = 0;
-			last_chess_index = 0;
+			last_chess_index = -1;
 			last_block_index = 0;
 			first_step_i = 0;
 			first_step_j = 0;
 			second_last_i = 0;
 			second_last_j = 0;
-			second_last_chess_index = 0;
+			second_last_chess_index = -1;
 			second_last_block_index = 0;
+			first_block_index = 0;
+			first_chess_index = -1;
+			
 		}
 	}
 finish:

@@ -91,7 +91,7 @@ int main()
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	//Shader simpleDepthShader("shader/shadow_mapping_depth.vs", "shader/shadow_mapping_depth.fs");
-	Shader simpleDepthShader("3.2.2.point_shadows_depth.vs", "3.2.2.point_shadows_depth.fs", "3.2.2.point_shadows_depth.gs");
+	Shader simpleDepthShader("shader/3.2.2.point_shadows_depth.vs", "shader/3.2.2.point_shadows_depth.fs", "shader/3.2.2.point_shadows_depth.gs");
 	Shader debugDepthQuad("shader/debug_quad.vs", "shader/debug_quad_depth.fs");
 
 	// build and compile shaders
@@ -141,13 +141,6 @@ int main()
 		-1.0f, -1.0f,  1.0f,
 		1.0f, -1.0f,  1.0f
 	};
-
-
-	// load models
-	// -----------
-	//Chess *bishop_a = new ChessBishop(0, 0, 0, "Chess/Bishop.obj");
-
-	//Model chess_board_model("models/chessboard/123.obj");
 
 	vector <ChessBoard *> Block_list1 = {
 		new ChessBoard("models/Board_Blocks/1.obj", BLACK),
@@ -332,8 +325,6 @@ int main()
 
 	chess_list = chess_list1;
 
-	//Model *chessboard = new Model("chessboard/Chessboard.obj");
-
 	unsigned int skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
@@ -344,15 +335,6 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
 
 
-	/*vector<std::string> faces
-	{
-		"models/Board_Blocks/white.png",
-		"models/Board_Blocks/white.png",
-		"models/Board_Blocks/white.png",
-		"models/Board_Blocks/white.png",
-		"models/Board_Blocks/white.png",
-		"models/Board_Blocks/white.png"
-	};*/
 	vector<std::string> faces
 	{
 	"models/skybox/right.jpg",
@@ -393,22 +375,14 @@ int main()
 
 
 	//Shader shader("shader/board-model.vs", "shader/board-model.fs");
-	Shader shader("3.2.2.point_shadows.vs", "3.2.2.point_shadows.fs");
+	Shader shader("shader/3.2.2.point_shadows.vs", "shader/3.2.2.point_shadows.fs");
 	Shader explode_shader("shader/explode.vs", "shader/explode.fs", "shader/explode.gs");
 
-
-	Shader shaderSingleColor("shader/2.stencil_testing.vs", "shader/2.stencil_single_color.fs");
 
 	Shader select_shader("shader/geometry_select.vs", "shader/geometry_select.fs", "shader/geometry_select.gs");
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix(chess_list);
-
-	shaderSingleColor.use();
-
-	shaderSingleColor.setMat4("view", view);
-	shaderSingleColor.setMat4("projection", projection);
-
 
 	explode_shader.use();
 	//explode_shader.setInt("diffuseTexture", 0);
@@ -554,11 +528,21 @@ void process_scene(Shader &shader, Shader &DepthShader, Shader &DepthQuad, Shade
 	{
 		if (chess_list[i]->_if_explode || chess_list[i]->check_death())
 			continue;
+		if (!chess_list[i]->if_selected_)
+			continue;
 		glm::mat4 model = glm::mat4();
 		chess_list[i]->get_model(model);
 		select_shader.setMat4("model", model);
-		if (chess_list[i]->if_selected_)
-			chess_list[i]->chess_model_.Draw(select_shader);
+		if(chess_list[i]->select_effect == 0)
+		{
+			printf("Error!");
+			select_shader.setVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		else if (chess_list[i]->select_effect == 1)
+			select_shader.setVec3("objectColor", glm::vec3(1.0f, 175.0f/255.0f, 96.0f/255.0f));
+		else if (chess_list[i]->select_effect == 2)
+			select_shader.setVec3("objectColor", glm::vec3(1.0f, 40.0f / 255.0f, 148.0f / 255.0f));
+		chess_list[i]->show(select_shader);
 	}
 
 
@@ -628,23 +612,23 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 	}
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
-		chess_list[5]->get_moving_function(0, 0);
+		chess_list[5]->get_moving_function(0, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
 	{
-		chess_list[23]->get_moving_function(2, 2);
+		chess_list[23]->get_moving_function(2, 2, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
 	{
-		chess_list[14]->get_moving_function(-4, 0);
+		chess_list[14]->get_moving_function(-4, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
 	{
-		chess_list[16]->get_moving_function(1, -1);
+		chess_list[16]->get_moving_function(1, -1, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
 	{
-		chess_list[21]->get_moving_function(4, -1);
+		chess_list[21]->get_moving_function(4, -1, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
 	{
@@ -707,62 +691,47 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void process_selected(Shader &shader, std::vector<Chess *> &chess_list)
 {
-	vector<Chess *>::iterator it = chess_list.begin();
+	//vector<Chess *>::iterator it = chess_list.begin();
 	glm::vec3 color1 CHESS_COLOR1;
 	shader.setVec3("objectColor", color1);
-	while (it<chess_list.end())
+	for (int i = 0; i < chess_list.size(); i+=3)
 	{
-		if (!(*it)->if_selected_) {
-			it += 3;
+		if (!chess_list[i]->if_selected_)
+		{
 			continue;
 		}
-		// team1, yellow
 		glm::mat4 model;
-		(*it)->get_model(model);
+		chess_list[i]->get_model(model);
 		shader.setMat4("model", model);
-		(*it)->show(shader);
-		//++it;
-		it += 3;
+		chess_list[i]->show(shader);
 	}
-
-	// team2, blue
+	
 	glm::vec3 color2 CHESS_COLOR2;
 	shader.setVec3("objectColor", color2);
-	it = chess_list.begin();
-	++it;
-	while (it<chess_list.end())
+	for (int i = 1; i < chess_list.size(); i += 3)
 	{
-		if (!(*it)->if_selected_) {
-			it += 3;
+		if (!chess_list[i]->if_selected_)
+		{
 			continue;
 		}
 		glm::mat4 model;
-		(*it)->get_model(model);
+		chess_list[i]->get_model(model);
 		shader.setMat4("model", model);
-		(*it)->show(shader);
-		//++it;
-		it += 3;
+		chess_list[i]->show(shader);
 	}
-
-	// team3, red
 	glm::vec3 color3 CHESS_COLOR3;
 	shader.setVec3("objectColor", color3);
-	it = chess_list.begin();
-	it += 2;
-	while (it<chess_list.end())
+	for (int i = 2; i < chess_list.size(); i += 3)
 	{
-		if (!(*it)->if_selected_) {
-			it += 3;
+		if (!chess_list[i]->if_selected_)
+		{
 			continue;
 		}
 		glm::mat4 model;
-		(*it)->get_model(model);
+		chess_list[i]->get_model(model);
 		shader.setMat4("model", model);
-		(*it)->show(shader);
-		//++it;
-		it += 3;
+		chess_list[i]->show(shader);
 	}
-	return;
 }
 
 void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_time, bool if_explode, bool if_motion_blur)
@@ -771,236 +740,162 @@ void show_chess(std::vector<Chess *> &chess_list, Shader &shader, bool if_real_t
 	//shader.setFloat("time", glfwGetTime());
 	if (!if_real_time)
 	{
-		vector<Chess *>::iterator it = chess_list.begin();
+		//vector<Chess *>::iterator it = chess_list.begin();
 		glm::vec3 color1 CHESS_COLOR1;
 		shader.setVec3("objectColor", color1);
-		while (it<chess_list.end())
+		for (int i = 0; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->check_death())
+			if (chess_list[i]->check_death())
 			{
-				it += 3;
 				continue;
 			}
-			// team1, yellow
-
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
-
-		// team2, blue
 		glm::vec3 color2 CHESS_COLOR2;
 		shader.setVec3("objectColor", color2);
-		it = chess_list.begin();
-		++it;
-		while (it<chess_list.end())
+		for (int i = 1; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->check_death())
+			if (chess_list[i]->check_death())
 			{
-				it += 3;
 				continue;
 			}
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
-
-		// team3, red
 		glm::vec3 color3 CHESS_COLOR3;
 		shader.setVec3("objectColor", color3);
-		it = chess_list.begin();
-		it += 2;
-		while (it<chess_list.end())
+		for (int i = 2; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->check_death())
+			if (chess_list[i]->check_death())
 			{
-				it += 3;
 				continue;
 			}
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
-		}
+			chess_list[i]->show(shader);
+		}	
 		return;
 	}
 	if (!if_explode)
 	{
-		vector<Chess *>::iterator it = chess_list.begin();
-		while (it<chess_list.end())
+		//vector<Chess *>::iterator it = chess_list.begin();
+		glm::vec3 color1 CHESS_COLOR1;
+		shader.setVec3("objectColor", color1);
+		for (int i = 0; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (chess_list[i]->if_selected_ || chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
-			if (if_motion_blur)
-			{
-				shader.setInt("num_samples", 10);
-				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
-			}
-			else
-			{
-				shader.setInt("num_samples", 1);
-				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
-			}
-			glm::vec3 color1 CHESS_COLOR1;
-			shader.setVec3("objectColor", color1);
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
 
 		// team2, green
 		glm::vec3 color2 CHESS_COLOR2;
 		shader.setVec3("objectColor", color2);
-		it = chess_list.begin();
-		++it;
-		while (it<chess_list.end())
+		for (int i = 1; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (chess_list[i]->if_selected_ || chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
-			if (if_motion_blur)
-			{
-				shader.setInt("num_samples", 10);
-				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
-			}
-			else
-			{
-				shader.setInt("num_samples", 1);
-				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
-			}
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
 
 		// team3, red
 		glm::vec3 color3 CHESS_COLOR3;
 		shader.setVec3("objectColor", color3);
-		it = chess_list.begin();
-		it += 2;
-		while (it<chess_list.end())
+		for (int i = 2; i < chess_list.size(); i += 3)
 		{
-			if ((*it)->if_selected_ || (*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (chess_list[i]->if_selected_ || chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
-			if (if_motion_blur)
-			{
-				shader.setInt("num_samples", 10);
-				shader.setVec2("velocity", glm::vec2(0.1f, 0.1f));
-			}
-			else
-			{
-				shader.setInt("num_samples", 1);
-				shader.setVec2("velocity", glm::vec2(0.0f, 0.0f));
-			}
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
-		return;
 	}
 	else
 	{
-		vector<Chess *>::iterator it = chess_list.begin();
-		while (it<chess_list.end())
+		glm::vec3 color1 CHESS_COLOR1;
+		shader.setVec3("objectColor", color1);
+		for (int i = 0; i < chess_list.size(); i += 3)
 		{
-			if (!(*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (!chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
-			glm::vec3 color1 CHESS_COLOR1;
-			shader.setVec3("objectColor", color1);
-
 			counter *= 1.4;
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
 			if (counter >= 10.0f) {
 				counter = 0.01;
-				(*it)->_if_explode = false;
-				(*it)->set_death();
+				chess_list[i]->_if_explode = false;
+				chess_list[i]->set_death();
 			}
 			shader.setFloat("time", counter);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
 
 		// team2, green
 		glm::vec3 color2 CHESS_COLOR2;
 		shader.setVec3("objectColor", color2);
-		it = chess_list.begin();
-		++it;
-		while (it<chess_list.end())
+		for (int i = 1; i < chess_list.size(); i += 3)
 		{
-			if (!(*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (!chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
 			counter *= 1.4;
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-			if (counter >= 20.0f) {
+			if (counter >= 10.0f) {
 				counter = 0.01;
-				(*it)->_if_explode = false;
-				(*it)->set_death();
+				chess_list[i]->_if_explode = false;
+				chess_list[i]->set_death();
 			}
 			shader.setFloat("time", counter);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
 
 		// team3, red
 		glm::vec3 color3 CHESS_COLOR3;
 		shader.setVec3("objectColor", color3);
-		it = chess_list.begin();
-		it += 2;
-		while (it<chess_list.end())
+		for (int i = 2; i < chess_list.size(); i += 3)
 		{
-			if (!(*it)->_if_explode || (*it)->check_death()) {
-				it += 3;
+			if (!chess_list[i]->_if_explode || chess_list[i]->check_death())
+			{
 				continue;
 			}
 			counter *= 1.4;
 			glm::mat4 model;
-			(*it)->get_model(model);
+			chess_list[i]->get_model(model);
 			shader.setMat4("model", model);
-			if (counter >= 30.0f) {
+			if (counter >= 10.0f) {
 				counter = 0.01;
-				(*it)->_if_explode = false;
-				(*it)->set_death();
+				chess_list[i]->_if_explode = false;
+				chess_list[i]->set_death();
 			}
 			shader.setFloat("time", counter);
-			(*it)->show(shader);
-			//++it;
-			it += 3;
+			chess_list[i]->show(shader);
 		}
+		
 	}
 }
 
