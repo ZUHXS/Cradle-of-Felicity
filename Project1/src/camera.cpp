@@ -163,8 +163,8 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 		const glm::vec3 a_pos(0.0f, 0.0f, 0.0f);
 
 
-		const double normal_x = (static_cast<float>(xoffset) - 400.0f) / 400.0f;
-		const double normal_y = (300.0f - static_cast<float>(yoffset)) / 300.0f;
+		const double normal_x = (static_cast<float>(xoffset) - 800.0f) / 800.0f;
+		const double normal_y = (600.0f - static_cast<float>(yoffset)) / 600.0f;
 		int min_i = 0;
 		int min_j = 0;
 		double min = 0.009;
@@ -262,8 +262,8 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 	{
 		const glm::vec3 a_pos(0.0f, 0.0f, 0.0f);
 
-		const double normal_x = (static_cast<float>(xoffset) - 400.0f) / 400.0f;
-		const double normal_y = (300.0f - static_cast<float>(yoffset)) / 300.0f;
+		const double normal_x = (static_cast<float>(xoffset) - 800.0f) / 800.0f;
+		const double normal_y = (600.0f - static_cast<float>(yoffset)) / 600.0f;
 		int min_i = 0;
 		int min_j = 0;
 		double min = 0.009;
@@ -369,8 +369,9 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 
 	if(mouse_button)  // if pressed
 	{
-		printf("Press detected, cur step: %d\n", step);
+		//printf("Press detected, cur step: %d\n", step);
 		if (!step) {
+			printf("selected %d, %d\n", last_i, last_j);
 			if(last_chess_index == -1)
 			{
 				goto finish;   // no chess selected
@@ -379,18 +380,14 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, std::vector<Ches
 			chess_list[first_chess_index]->if_selected_ = true;
 			chess_list[first_chess_index]->select_effect = 1;
 			Block_list[first_block_index]->block_color = HIGHLIGHTCOLOR;
-			//second_last_chess_index = first_chess_index;
-			//second_last_block_index = first_block_index;
-			//second_last_i = last_i;
-			//second_last_j = last_j;
 			first_step_i = last_i;
 			first_step_j = last_j;
 		}
 		else
 		{
-			printf("second step.\n");
+			//printf("second step.\n");
 			step = 0;
-			if (second_last_chess_index != -1)
+			if (second_last_chess_index != -1 && !chess_list[first_chess_index]->id_if_gunman())
 				chess_list[second_last_chess_index]->_if_explode = true;
 			chess_list[last_chess_index]->get_moving_function(second_last_i, second_last_j, *this);
 			chess_list[first_chess_index]->select_effect = 0;

@@ -10,7 +10,8 @@ public:
 	virtual ~Chess() = default;
 	virtual void show(Shader &input_shader) = 0;
 	virtual void get_model(glm::mat4& model);
-	virtual void get_moving_function(int next_pos_x, int next_pos_y, const Camera &camera);
+	virtual void get_moving_function(int next_pos_x, int next_pos_y, Camera &camera);
+	virtual int id_if_gunman() const;
 	void set_death(bool status = true);
 	const int get_cor_x();
 	const int get_cor_y();

@@ -37,7 +37,7 @@ void Chess::get_model(glm::mat4 & model)
 	model = glm::scale(model, scale_);
 }
 
-void Chess::get_moving_function(int next_pos_x, int next_pos_y, const Camera &camera)
+void Chess::get_moving_function(int next_pos_x, int next_pos_y, Camera &camera)
 {
 	cor_x_ = next_pos_x;
 	cor_y_ = next_pos_y;
@@ -47,6 +47,11 @@ void Chess::get_moving_function(int next_pos_x, int next_pos_y, const Camera &ca
 	//this->next_position = glm::vec3(vertice_coordinate[next_pos_x+9][next_pos_y+5][0], vertice_coordinate[next_pos_x+9][next_pos_y+5][1], vertice_coordinate[next_pos_x+9][next_pos_y+5][2]);
 	//this->distance = 20;
 	this->if_moving = true;
+}
+
+int Chess::id_if_gunman() const
+{
+	return 0;
 }
 
 void Chess::set_death(bool status)

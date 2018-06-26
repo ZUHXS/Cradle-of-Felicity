@@ -19,8 +19,8 @@
 //unsigned int loadCubemap(vector<std::string> faces);
 
 // settings
-#define SCR_WIDTH 800
-#define SCR_HEIGHT 600
+#define SCR_WIDTH 1600
+#define SCR_HEIGHT 1200
 
 // camera
 Camera camera(glm::vec3(0.0f, 2.0f, 3.0f));
@@ -300,9 +300,9 @@ int main()
 		new ChessWizard(0, -5, 0, 8, "models/Chess/Wizard1.obj"),
 		new ChessWizard(7, 2, 1, 8, "models/Chess/Wizard2.obj"),
 		new ChessWizard(-7, 2, 2, 8, "models/Chess/Wizard3.obj"),
-		new ChessGunman(-2, -5, 0, 9, "models/Chess/Gunman1.obj"),
-		new ChessGunman(8, 1, 1, 9, "models/Chess/Gunman2.obj"),
-		new ChessGunman(-6, 3, 2, 9, "models/Chess/Gunman3.obj"),
+		new ChessGunman(-2, -5, 0, 9, "models/Chess/Gunman1.obj", camera),
+		new ChessGunman(8, 1, 1, 9, "models/Chess/Gunman2.obj", camera),
+		new ChessGunman(-6, 3, 2, 9, "models/Chess/Gunman3.obj", camera),
 		new ChessPawn(-5, -4, 0, 10, "models/Chess/Pawn1.obj"),
 		new ChessPawn(3, 4, 1, 10, "models/Chess/Pawn2.obj"),
 		new ChessPawn(-8, -1, 2, 10, "models/Chess/Pawn3.obj"),
@@ -624,24 +624,26 @@ void processInput(GLFWwindow *window, std::vector<Chess *> chess_list)
 	}
 	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
 	{
-		chess_list[16]->get_moving_function(1, -1, camera);
+		//chess_list[16]->get_moving_function(1, -1, camera);
+		chess_list[27]->get_moving_function(0, 0, camera);
+		//chess_list[28]->get_moving_function(0, 0, camera);
+	
 	}
 	if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
 	{
-		chess_list[21]->get_moving_function(4, -1, camera);
+		chess_list[27]->get_moving_function(-2, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
 	{
-		chess_list[5]->set_death(false);
-		chess_list[5]->_if_explode = false;
+		chess_list[27]->get_moving_function(-5, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
-		chess_list[5]->_if_explode = true;
+		chess_list[27]->get_moving_function(-7, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 	{
-		chess_list[23]->_if_explode = true;
+		chess_list[27]->get_moving_function(-9, 0, camera);
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
 	{
@@ -672,7 +674,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	int second_i;
 	int second_j;
 	camera.ProcessMouseMovement(xpos, ypos, chess_list, Block_list, mouse_button_status);
-	printf("status: %d\n", glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT));
+	//printf("status: %d\n", glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT));
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
